@@ -1,0 +1,147 @@
+.blur {
+  backdrop-filter:
+    invert()
+    hue-rotate(180deg)
+    blur(10px)
+    contrast(50%)
+    brightness(82%);
+  background-image: url(noise.png);
+}
+
+.chart {
+  border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  background-color: #ffffff22;
+
+  display: flex;
+  flex-direction: row;
+
+  box-shadow: 0 0 8px 2px #00000066;
+}
+
+.chartHeaders {
+  display: flex;
+  flex-direction: column;
+  /* gap: 3px; */
+
+  border-radius: 8px 0 0 8px;
+  overflow: hidden;
+
+  box-shadow: inset -2px 0 2px #00000022;
+}
+
+.chartContent {
+  display: flex;
+  flex-direction: column;
+  /* gap: 3px; */
+
+  border-radius: 0 10px 10px 0;
+  overflow: hidden;
+}
+
+.headerRow {
+  height: 30px;
+  padding: 10px;
+
+  display: flex;
+  align-items: middle;
+
+  background-color: #ffffff22;
+  box-shadow: 0px 2px 2px #ffffff33;
+}
+
+.modeTag {
+  line-height: 16px;
+
+  font-family: 'Lacquer';
+  font-size: 1.1em;
+
+  background-color: #222;
+  color: #fff;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+
+  padding: 5px 15px 5px 15px;
+  border-radius: 4px;
+}
+
+.contentRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  overflow: hidden;
+
+  width: 230px; height: 50px;
+  padding-left: 5px;
+
+  box-shadow: 0px 2px 2px #ffffff33;
+}
+
+.card {
+  position: relative;
+  width: 30px; height: 40px;
+}
+
+.cardContent {
+  position: absolute;
+  z-index: 1;
+
+  width: 25px; height: 35px;
+  margin-top: 8px;
+
+  font-family: 'Kelly Slab';
+  font-size: .9em;
+
+  outline: 1px solid #00000088;
+  border-radius: 4px;
+
+  box-shadow: -2px 2px 2px #00000044, inset -1px 1px 2px #ffffff99;
+  /* box-shadow: inset -1px 1px 2px #ffffff99; */
+
+  color: #000000;
+}
+
+.cardNumber {
+  color: #000000aa;
+  
+  margin-top: 2px;
+  padding-left: 4px;
+  
+  font-size: .6em;
+  font-weight: bold;
+  text-align: left;
+  /* text-align: center; */
+
+  font-family: 'Trebuchet MS';
+}
+
+.cardText {
+  color: #000;
+
+  margin-top: -1px;
+
+  font-size: 1.2em;
+  text-align: center; 
+}
+
+.accidental {
+  margin-left: -.5px;
+  font-size: .8em;
+}
+
+.maj { background-color: #59c534 }
+.min { background-color: #26a7df }
+.dim { background-color: #ebbe37 }
+
+/* .maj { background-color: #c723c7 }
+.min { background-color: #23c7c7 }
+.dim { background-color: #c7c723 } */
+
+.cardShadow {
+  position: absolute;
+  z-index: 0;
+
+  width: 100px; height: 25px;
+  margin: 32px 0 0 -36.5px;
+  /* background: radial-gradient(#00000044 10%, transparent 25%); */
+}
