@@ -9,32 +9,20 @@
 }
 
 #backdropA {
-  width: 33.333%; height: 100%;
+  width: 50%; height: 100%;
   position: absolute;
   left: 0;
   z-index: -1;
 
-  /* background: url(bg2.jpeg) center/300%; */
   background: url(./Chart/noise.png) #222;
-
 }
 
 #backdropB {
-  width: 33.333%; height: 100%;
-  position: absolute;
-  left: 33.333%;
-  z-index: -1;
-
-  background: url(bg2.jpeg) center/300%;
-  /* background: url(./Chart/noise.png) #eee; */
-}
-
-#backdropC {
-  width: 33.333%; height: 100%;
+  width: 50%; height: 100%;
   position: absolute;
   right: 0;
   z-index: -1;
 
-  /* background: url(./Chart/noise.png) #de3838; */
-  background: url(./Chart/noise.png) #eee;
+  background: url(bg.jpeg) center/300%;
+  border-left: 2px solid #888;
 }

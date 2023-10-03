@@ -22,7 +22,6 @@
 .chartHeaders {
   display: flex;
   flex-direction: column;
-  /* gap: 3px; */
 
   border-radius: 8px 0 0 8px;
   overflow: hidden;
@@ -33,7 +32,6 @@
 .chartContent {
   display: flex;
   flex-direction: column;
-  /* gap: 3px; */
 
   border-radius: 0 10px 10px 0;
   overflow: hidden;
@@ -95,7 +93,7 @@
   outline: 1px solid #00000088;
   border-radius: 4px;
 
-  box-shadow: -2px 2px 2px #00000044, inset -1px 1px 2px #ffffff99;
+  box-shadow: -3px 3px 3px #00000044, inset -1px 1px 2px #ffffff99;
   /* box-shadow: inset -1px 1px 2px #ffffff99; */
 
   color: #000000;

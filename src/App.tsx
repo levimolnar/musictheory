@@ -10,12 +10,7 @@ function App() {
       
       <div id='backdropA' />
       <div id='backdropB' />
-      <div id='backdropC' />
-
-      <div>
-        <Bar />
-        <Chart />
-      </div>
+      
       <div>
         <Bar />
         <Chart />
