@@ -1,33 +1,58 @@
 import './Chart.css';
 
+const defaultScales = { 
+  // diatonic (natural) modes:
+  Lydian:     [0,2,4,6,7,9,11], 
+  Ionian:     [0,2,4,5,7,9,11], 
+  Mixolydian: [0,2,4,5,7,9,10], 
+  Dorian:     [0,2,3,5,7,9,10], 
+  Aeolian:    [0,2,3,5,7,8,10], 
+  Phrygian:   [0,1,3,5,7,8,10], 
+  Locrian:    [0,1,3,5,6,8,10],
+}
+
+const exampleOutput = {
+  lydian:     [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'maj', num: 'II'}, {char: 'E', type: 'min', num: 'iii'}, {char: 'F♯', type: 'dim', num: 'iv°'}, {char: 'G', type: 'maj', num: 'V'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B', type: 'min', num: 'vii'}], 
+  ionian:     [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E', type: 'min', num: 'iii'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'maj', num: 'V'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B', type: 'dim', num: 'vii°'}], 
+  mixolydian: [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E', type: 'dim', num: 'iii°'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
+  dorian:     [{char: 'C', type: 'min', num: 'i'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A', type: 'dim', num: 'vi°'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
+  aeolian:    [{char: 'C', type: 'min', num: 'i'}, {char: 'D', type: 'dim', num: 'ii°'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
+  phrygian:   [{char: 'C', type: 'min', num: 'i'}, {char: 'D♭', type: 'maj', num: 'II'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G', type: 'dim', num: 'v°'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'min', num: 'vii'}], 
+  locrian:    [{char: 'C', type: 'dim', num: 'i°'}, {char: 'D♭', type: 'maj', num: 'II'}, {char: 'E♭', type: 'min', num: 'iii'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G♭', type: 'maj', num: 'V'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'min', num: 'vii'}], 
+}
+
+const ScaleHeader = ({text}: {text: string}) => (
+  <div className='headerRow'>
+    <span className='modeTag'>{text}</span>
+  </div>
+)
+
+const ScaleRow = ({array}: {array: Array<{char: string, type: string, num: string}>}) => (
+  <div className='contentRow'>
+    { 
+      array.map(chord => (
+        <div className='card'>
+          <div className={'cardContent ' + chord.type} >
+            <div className='cardNumber'>{chord.num}</div>
+            <div className='cardText'>{chord.char[0]}<span className='accidental'>{chord.char[1]}</span></div>
+          </div>
+          <div className='cardShadow' />
+        </div>
+      )) 
+    }
+  </div>
+)
+
 export const Chart = () => {
   return (
     <div className='chart blur'>
       <div className='chartHeaders'>
-        <div className='headerRow'>
-          <span className='modeTag'>lydian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>ionian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>mixolydian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>dorian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>aeolian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>phrygian</span>
-        </div>
-        <div className='headerRow'>
-          <span className='modeTag'>locrian</span>
-        </div>
+        { Object.keys(exampleOutput).map(scaleName => <ScaleHeader text={scaleName} />) }
       </div>
       <div className='chartContent'>
-        <div className='contentRow'>
+        { Object.values(exampleOutput).map(scaleChars => <ScaleRow array={scaleChars} />) }
+
+        {/* <div className='contentRow'>
           <div className='card'>
             <div className='cardContent maj'>
               <div className='cardNumber'>I</div>
@@ -383,7 +408,7 @@ export const Chart = () => {
             </div>
             <div className='cardShadow' />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
