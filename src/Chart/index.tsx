@@ -4,7 +4,7 @@ import './Chart.css';
 import { useState, useEffect } from 'react';
 import { pitchSpeller } from './pitchSpeller';
 
-const defaultScales = { 
+const defaultScales: {[modeSetName: string]: {[modeName: string]: number[]}} = { 
   "HARM. MAJ. (♭6)": {
     "lydian ♭3":      [0,2,3,6,7,9,11],
     "harm. major":    [0,2,4,5,7,8,11],
@@ -74,21 +74,22 @@ export const Chart = () => {
 
   const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: string, num: string}>} | undefined>(undefined)
   const [transpose, setTranspose] = useState<number>(0)
-  const [modeSet, setModeSet] = useState<number>(0)
+  const [modeSet, setModeSet] = useState<string>(Object.keys(defaultScales)[1])
 
   useEffect(() => {
-    const scalesSpelled = pitchSpeller(Object.values(defaultScales)[modeSet], transpose)
+    const scalesSpelled = pitchSpeller(defaultScales[modeSet], transpose)
     console.log(scalesSpelled)
 
     setScales(scalesSpelled)
-  }, [setScales, transpose]);
+  }, [modeSet, transpose]);
 
   return (
     <>
-      <div className='blur' style={{width: '100%', backgroundColor: '#ffffff55', borderRadius: '8px', marginBottom: '10px'}}>
-        <input type="number" style={{width: '30px', height: '20px', margin: '9px', borderRadius: '5px', border: 'none'}} value={transpose} min={0} max={11} onChange={(e: any) => {
-          setTranspose(e.target.value)
-        }} />
+      <div className='settingsBar blur'>
+        <input type="number" style={{width: '30px', height: '20px', backgroundColor: '#333', color: 'white', padding: '0 0 0 5px', borderRadius: '4px', border: 'none', outline: 'none'}} value={transpose} min={0} max={11} onChange={(e: any) => setTranspose(e.target.value)} />
+        <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '4px', border: 'none', outline: 'none'}} value={modeSet} onChange={(e: any) => setModeSet(e.target.value)}>
+          { Object.keys(defaultScales).map(ms => <option value={ms}>{ms}</option>) }
+        </select>
       </div>
 
       <div className='chart blur'>

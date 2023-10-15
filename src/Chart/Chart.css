@@ -8,6 +8,22 @@
   background-image: url(noise.png);
 }
 
+.settingsBar {
+  width: auto;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+
+  border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  background-color: #ffffff22;
+
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+
+  box-shadow: 0 0 8px 2px #00000066;
+}
+
 .chart {
   border-radius: 8px;
   border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
