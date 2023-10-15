@@ -3,9 +3,10 @@ import './Bar.css';
 export const Bar = () => {
   return (
     <div className='bar barBlur'>
-      <div className='barCardContent maj'>1</div>
-      <div className='barCardContent min'>2</div>
-      <div className='barCardContent dim'>3</div>
+      <div className='barCardContent aug'>I⁺</div>
+      <div className='barCardContent maj'>II</div>
+      <div className='barCardContent min'>iii</div>
+      <div className='barCardContent dim'>iv°</div>
       <div className='emptyCard'>+</div>
     </div>
   );

@@ -1,24 +1,51 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import './Chart.css';
+import { useState, useEffect } from 'react';
+import { pitchSpeller } from './pitchSpeller';
 
 const defaultScales = { 
-  // diatonic (natural) modes:
-  Lydian:     [0,2,4,6,7,9,11], 
-  Ionian:     [0,2,4,5,7,9,11], 
-  Mixolydian: [0,2,4,5,7,9,10], 
-  Dorian:     [0,2,3,5,7,9,10], 
-  Aeolian:    [0,2,3,5,7,8,10], 
-  Phrygian:   [0,1,3,5,7,8,10], 
-  Locrian:    [0,1,3,5,6,8,10],
-}
-
-const exampleOutput = {
-  lydian:     [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'maj', num: 'II'}, {char: 'E', type: 'min', num: 'iii'}, {char: 'F♯', type: 'dim', num: 'iv°'}, {char: 'G', type: 'maj', num: 'V'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B', type: 'min', num: 'vii'}], 
-  ionian:     [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E', type: 'min', num: 'iii'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'maj', num: 'V'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B', type: 'dim', num: 'vii°'}], 
-  mixolydian: [{char: 'C', type: 'maj', num: 'I'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E', type: 'dim', num: 'iii°'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A', type: 'min', num: 'vi'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
-  dorian:     [{char: 'C', type: 'min', num: 'i'}, {char: 'D', type: 'min', num: 'ii'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'maj', num: 'IV'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A', type: 'dim', num: 'vi°'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
-  aeolian:    [{char: 'C', type: 'min', num: 'i'}, {char: 'D', type: 'dim', num: 'ii°'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G', type: 'min', num: 'v'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'maj', num: 'VII'}], 
-  phrygian:   [{char: 'C', type: 'min', num: 'i'}, {char: 'D♭', type: 'maj', num: 'II'}, {char: 'E♭', type: 'maj', num: 'III'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G', type: 'dim', num: 'v°'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'min', num: 'vii'}], 
-  locrian:    [{char: 'C', type: 'dim', num: 'i°'}, {char: 'D♭', type: 'maj', num: 'II'}, {char: 'E♭', type: 'min', num: 'iii'}, {char: 'F', type: 'min', num: 'iv'}, {char: 'G♭', type: 'maj', num: 'V'}, {char: 'A♭', type: 'maj', num: 'VI'}, {char: 'B♭', type: 'min', num: 'vii'}], 
+  "HARM. MAJ. (♭6)": {
+    "lydian ♭3":      [0,2,3,6,7,9,11],
+    "harm. major":    [0,2,4,5,7,8,11],
+    "mixolydian ♭2":  [0,1,4,5,7,9,10],
+    "dorian ♭5":      [0,2,3,5,6,9,10],
+    "lydian aug. ♯2": [0,3,4,6,8,9,11],  // ♭1!
+    "phrygian ♭4":    [0,1,3,4,7,8,10],
+    "locrian 𝄫7":     [0,1,3,5,6,8,9],
+  },
+  "DIATONIC": {
+    "lydian":     [0,2,4,6,7,9,11], 
+    "ionian":     [0,2,4,5,7,9,11], 
+    "mixolydian": [0,2,4,5,7,9,10], 
+    "dorian":     [0,2,3,5,7,9,10], 
+    "aeolian":    [0,2,3,5,7,8,10], 
+    "phrygian":   [0,1,3,5,7,8,10], 
+    "locrian":    [0,1,3,5,6,8,10],
+  },
+  "HARM. MIN. (♯7)": {
+    "lydian ♯2":     [0,3,4,6,7,9,11],
+    "ionian ♯5":     [0,2,4,5,8,9,11],
+    "altered 𝄫7":    [0,1,3,4,6,8,9],    // ♯1!
+    "ukr. dorian":   [0,2,3,6,7,9,10],
+    "harm. minor":   [0,2,3,5,7,8,11], 
+    "phrygian dom.": [0,1,4,5,7,8,10],
+    "locrian ♮6":    [0,1,3,5,6,9,10],
+  },
+  "JAZZ MIN. (♯6, ♯7)": {
+    "locrian ♮2":    [0,2,3,5,6,8,10],   // ♯1!
+    "lydian aug.":   [0,2,4,6,8,9,11],
+    "altered":       [0,1,3,4,6,8,10],   // ♯1!
+    "mixolydian ♯4": [0,2,4,6,7,9,10],
+    "jazz minor":    [0,2,3,5,7,9,11],
+    "aeolian dom.":  [0,2,4,5,7,8,10],
+    "phrygian ♮6":   [0,1,3,5,7,9,10],
+  },
+  "OTHER": {
+    "whole-tone": [0,2,4,6,8,10],
+    // "diminished": [0,2,3,5,6,8,9,11],
+    // "chromatic": [0,1,2,3,4,5,6,7,8,9,10,11],
+  }
 }
 
 const ScaleHeader = ({text}: {text: string}) => (
@@ -29,387 +56,55 @@ const ScaleHeader = ({text}: {text: string}) => (
 
 const ScaleRow = ({array}: {array: Array<{char: string, type: string, num: string}>}) => (
   <div className='contentRow'>
-    { 
-      array.map(chord => (
-        <div className='card'>
-          <div className={'cardContent ' + chord.type} >
-            <div className='cardNumber'>{chord.num}</div>
-            <div className='cardText'>{chord.char[0]}<span className='accidental'>{chord.char[1]}</span></div>
-          </div>
-          <div className='cardShadow' />
-        </div>
-      )) 
-    }
+    { array ? array.map(chord => <NoteCard chord={chord}/>) : null}
+  </div>
+)
+
+const NoteCard = ({chord}: {chord: {char: string, type: string, num: string}}) => (
+  <div className='card'>
+    <div className={'cardContent ' + chord.type} >
+      <div className='cardNumber'>{chord.num}</div>
+      <div className='cardText'>{chord.char[0]}<span className='accidental'>{chord.char.slice(1,)}</span></div>
+    </div>
+    <div className='cardShadow' />
   </div>
 )
 
 export const Chart = () => {
-  return (
-    <div className='chart blur'>
-      <div className='chartHeaders'>
-        { Object.keys(exampleOutput).map(scaleName => <ScaleHeader text={scaleName} />) }
-      </div>
-      <div className='chartContent'>
-        { Object.values(exampleOutput).map(scaleChars => <ScaleRow array={scaleChars} />) }
 
-        {/* <div className='contentRow'>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>I</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>II</div>
-              <div className='cardText'>D</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iii</div>
-              <div className='cardText'>E</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent dim'>
-              <div className='cardNumber'>iv°</div>
-              <div className='cardText'>F<span className='accidental'>#</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>V</div>
-              <div className='cardText'>G</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>vi</div>
-              <div className='cardText'>A</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>vii</div>
-              <div className='cardText'>B</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>I</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>ii</div>
-              <div className='cardText'>D</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iii</div>
-              <div className='cardText'>E</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>IV</div>
-              <div className='cardText'>F</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>V</div>
-              <div className='cardText'>G</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>vi</div>
-              <div className='cardText'>A</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent dim'>
-              <div className='cardNumber'>vii°</div>
-              <div className='cardText'>B</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-        <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>I</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>ii</div>
-              <div className='cardText'>D</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent dim'>
-              <div className='cardNumber'>iii°</div>
-              <div className='cardText'>E</div>
-            </div>            
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>IV</div>
-              <div className='cardText'>F</div>
-            </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>v</div>
-              <div className='cardText'>G</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-          <div className='cardContent min'>
-            <div className='cardNumber'>vi</div>
-            <div className='cardText'>A</div>
-          </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VII</div>
-              <div className='cardText'>B<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-        <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>i</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>ii</div>
-              <div className='cardText'>D</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>III</div>
-              <div className='cardText'>E<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>IV</div>
-              <div className='cardText'>F</div>
-            </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>v</div>
-              <div className='cardText'>G</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-          <div className='cardContent dim'>
-            <div className='cardNumber'>vi°</div>
-            <div className='cardText'>A</div>
-          </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VII</div>
-              <div className='cardText'>B<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-        <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>i</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent dim'>
-              <div className='cardNumber'>ii°</div>
-              <div className='cardText'>D</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>III</div>
-              <div className='cardText'>E<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iv</div>
-              <div className='cardText'>F</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>v</div>
-              <div className='cardText'>G</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VI</div>
-              <div className='cardText'>A<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VII</div>
-              <div className='cardText'>B<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-        <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>i</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>II</div>
-              <div className='cardText'>D<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>III</div>
-              <div className='cardText'>E<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iv</div>
-              <div className='cardText'>F</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-          <div className='cardContent dim'>
-            <div className='cardNumber'>v°</div>
-            <div className='cardText'>G</div>
-          </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VI</div>
-              <div className='cardText'>A<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>vii</div>
-              <div className='cardText'>B<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div>
-        <div className='contentRow'>
-        <div className='card'>
-            <div className='cardContent dim'>
-              <div className='cardNumber'>i°</div>
-              <div className='cardText'>C</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>II</div>
-              <div className='cardText'>D<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iii</div>
-              <div className='cardText'>E<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>iv</div>
-              <div className='cardText'>F</div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-          <div className='cardContent maj'>
-              <div className='cardNumber'>V</div>
-              <div className='cardText'>G<span className='accidental'>b</span></div>
-          </div>
-          <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent maj'>
-              <div className='cardNumber'>VI</div>
-              <div className='cardText'>A<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-          <div className='card'>
-            <div className='cardContent min'>
-              <div className='cardNumber'>vii</div>
-              <div className='cardText'>B<span className='accidental'>b</span></div>
-            </div>
-            <div className='cardShadow' />
-          </div>
-        </div> */}
+  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: string, num: string}>} | undefined>(undefined)
+  const [transpose, setTranspose] = useState<number>(0)
+  const [modeSet, setModeSet] = useState<number>(0)
+
+  useEffect(() => {
+    const scalesSpelled = pitchSpeller(Object.values(defaultScales)[modeSet], transpose)
+    console.log(scalesSpelled)
+
+    setScales(scalesSpelled)
+  }, [setScales, transpose]);
+
+  return (
+    <>
+      <div className='blur' style={{width: '100%', backgroundColor: '#ffffff55', borderRadius: '8px', marginBottom: '10px'}}>
+        <input type="number" style={{width: '30px', height: '20px', margin: '9px', borderRadius: '5px', border: 'none'}} value={transpose} min={0} max={11} onChange={(e: any) => {
+          setTranspose(e.target.value)
+        }} />
       </div>
-    </div>
+
+      <div className='chart blur'>
+        { 
+          scales ? (
+            <>
+              <div className='chartHeaders'>
+                { Object.keys(scales).map(scaleName => <ScaleHeader text={scaleName} />) }
+              </div>
+              <div className='chartContent'>
+                { Object.values(scales).map(scaleChars => <ScaleRow array={scaleChars} />) }
+              </div>
+            </>
+          ) : <></>
+        }
+      </div>
+    </>
   );
 }

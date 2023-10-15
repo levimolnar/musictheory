@@ -87,16 +87,13 @@
   width: 25px; height: 35px;
   margin-top: 8px;
 
-  font-family: 'Kelly Slab';
-  font-size: .9em;
-
   outline: 1px solid #00000088;
   border-radius: 4px;
 
   box-shadow: -3px 3px 3px #00000044, inset -1px 1px 2px #ffffff99;
   /* box-shadow: inset -1px 1px 2px #ffffff99; */
 
-  color: #000000;
+  /* color: #000000; */
 }
 
 .cardNumber {
@@ -105,35 +102,43 @@
   margin-top: 2px;
   padding-left: 4px;
   
-  font-size: .6em;
   font-weight: bold;
   text-align: left;
   /* text-align: center; */
 
   font-family: 'Trebuchet MS';
+  font-size: .6em;
 }
 
 .cardText {
-  color: #000;
-
   margin-top: -1px;
-
-  font-size: 1.2em;
-  text-align: center; 
+  text-align: center;
+  
+  font-family: 'Kelly Slab';
+  font-size: 1.1em;
 }
 
 .accidental {
   margin-left: -.5px;
+  
+  font-family: 'Kelly Slab';
   font-size: .8em;
 }
 
-.maj { background-color: #59c534 }
-.min { background-color: #26a7df }
-.dim { background-color: #ebbe37 }
+.dim { background-color: hsl(195, 70%, 42%) }
+.min { background-color: hsl(195, 70%, 68%) }
+.maj { background-color: hsl(40,  15%, 88%)}
+.aug { background-color: hsl(15,  70%, 62%) }
 
-/* .maj { background-color: #c723c7 }
-.min { background-color: #23c7c7 }
-.dim { background-color: #c7c723 } */
+/* .min { background-color: hsl(210, 28%, 65%) }
+.dim { background-color: hsl(210, 28%, 50%) }
+.maj { background-color: hsl(10, 75%, 80%) }
+.aug { background-color: hsl(10, 75%, 65%) } */
+
+/* .dim { background-color: hsl(54,  70%, 64%) }
+.min { background-color: hsl(172, 70%, 50%) }
+.maj { background-color: hsl(330, 74%, 66%) }
+.aug { background-color: hsl(352, 76%, 60%) } */
 
 .cardShadow {
   position: absolute;
