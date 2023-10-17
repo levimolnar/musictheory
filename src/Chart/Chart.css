@@ -1,3 +1,7 @@
+:root {
+  --defShadow: -4px 4px 6px #00000055;
+}
+
 .blur {
   backdrop-filter:
     invert()
@@ -9,8 +13,7 @@
 }
 
 .settingsBar {
-  width: auto;
-  padding: 5px 10px;
+  width: auto; height: 30px;
   margin-bottom: 5px;
 
   border-radius: 8px;
@@ -19,9 +22,23 @@
 
   display: flex;
   flex-direction: row;
-  gap: 5px;
 
-  box-shadow: 0 0 8px 2px #00000066;
+  box-shadow: var(--defShadow);
+}
+
+.transposeButton {
+  cursor: pointer;
+  line-height: 13px;
+  font-size: 1.2em;
+  border-radius: 2px; 
+  background: linear-gradient(#ffffff44, transparent);
+
+  user-select: none;
+}
+
+.transposeButton:hover {
+  background: #ffffff44;
+  color: #fff;
 }
 
 .chart {
@@ -32,7 +49,7 @@
   display: flex;
   flex-direction: row;
 
-  box-shadow: 0 0 8px 2px #00000066;
+  box-shadow: var(--defShadow);
 }
 
 .chartHeaders {
@@ -68,9 +85,9 @@
   line-height: 16px;
 
   font-family: 'Lacquer';
-  font-size: 1.1em;
+  font-size: 1em;
 
-  background-color: #222;
+  background-color: #333;
   color: #fff;
   border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
 
@@ -81,24 +98,24 @@
 .contentRow {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
 
   overflow: hidden;
 
-  width: 230px; height: 50px;
-  padding-left: 5px;
+  width: 215px; height: 50px;
 
   box-shadow: 0px 2px 2px #ffffff33;
 }
 
 .card {
-  position: relative;
-  width: 30px; height: 40px;
+  user-select: none;
+  /* background-color: #ffff0022; */
 }
 
 .cardContent {
-  position: absolute;
   z-index: 1;
+  position: relative;
 
   width: 25px; height: 35px;
   margin-top: 8px;
@@ -106,17 +123,14 @@
   outline: 1px solid #00000088;
   border-radius: 4px;
 
-  box-shadow: -3px 3px 3px #00000044, inset -1px 1px 2px #ffffff99;
-  /* box-shadow: inset -1px 1px 2px #ffffff99; */
-
-  /* color: #000000; */
+  box-shadow: -2px 2px 3px #00000055, inset -1px 1px 2px #ffffff99;
 }
 
 .cardNumber {
-  color: #000000aa;
-  
-  margin-top: 2px;
-  padding-left: 4px;
+  color: #000;
+
+  position: absolute;
+  top: 2px; left: 4px;
   
   font-weight: bold;
   text-align: left;
@@ -127,24 +141,32 @@
 }
 
 .cardText {
-  margin-top: -1px;
+  position: absolute;
+  top: 12.5px; left: 3px;
+
+  width: 19px; height: 19px;
+  line-height: 19px;
+
+  background: linear-gradient(transparent 33%, #ffffff66);
+  border-radius: 50%;
+
   text-align: center;
   
-  font-family: 'Kelly Slab';
-  font-size: 1.1em;
+  font-family: 'Zilla Slab';
+  font-size: .9em;
 }
 
 .accidental {
   margin-left: -.5px;
   
-  font-family: 'Kelly Slab';
+  font-family: 'Zilla Slab';
   font-size: .8em;
 }
 
-.dim { background-color: hsl(195, 70%, 42%) }
-.min { background-color: hsl(195, 70%, 68%) }
-.maj { background-color: hsl(40,  15%, 88%)}
-.aug { background-color: hsl(15,  70%, 62%) }
+.dim { background-color: hsl(195, 70%, 44%) }
+.min { background-color: hsl(195, 70%, 72%) }
+.maj { background-color: hsl(40,  5%, 82%)}
+.aug { background-color: hsl(15,  70%, 64%) }
 
 /* .min { background-color: hsl(210, 28%, 65%) }
 .dim { background-color: hsl(210, 28%, 50%) }
@@ -155,12 +177,3 @@
 .min { background-color: hsl(172, 70%, 50%) }
 .maj { background-color: hsl(330, 74%, 66%) }
 .aug { background-color: hsl(352, 76%, 60%) } */
-
-.cardShadow {
-  position: absolute;
-  z-index: 0;
-
-  width: 100px; height: 25px;
-  margin: 32px 0 0 -36.5px;
-  /* background: radial-gradient(#00000044 10%, transparent 25%); */
-}
