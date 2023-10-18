@@ -1,0 +1,69 @@
+.cardContent {
+  z-index: 1;
+  position: relative;
+
+  width: 25px; height: 35px;
+
+  outline: 1px solid #00000088;
+  border-radius: 4px;
+
+  box-shadow: -2px 2px 3px #00000055, inset -1px 1px 2px #ffffff99;
+
+  cursor: grab;
+  user-select: none;
+}
+
+.cardNumber {
+  color: #000;
+
+  position: absolute;
+  top: 2px; left: 4px;
+  
+  font-weight: bold;
+  text-align: left;
+
+  font-family: 'Trebuchet MS';
+  font-size: .6em;
+}
+
+.cardText {
+  position: absolute;
+  top: 12.5px; left: 3px;
+
+  width: 19px; height: 19px;
+  line-height: 19px;
+
+  background: linear-gradient(transparent 33%, #ffffff66);
+  border-radius: 50%;
+
+  text-align: center;
+  
+  font-family: 'Zilla Slab';
+  font-size: .9em;
+}
+
+.accidental {
+  margin-left: -.5px;
+  
+  font-family: 'Zilla Slab';
+  font-size: .8em;
+}
+
+.dim     { background-color: hsl(195, 70%, 44%) }
+.min     { background-color: hsl(195, 70%, 72%) }
+.maj     { background-color: hsl(40,  5%,  82%) }
+.aug     { background-color: hsl(15,  70%, 64%) }
+.unknown { background-color: hsl(0,   0%,  50%) }
+.empty { 
+  width: 22px; height: 31px;
+  border-radius: 4px;
+  border: 2px solid #ffffffbb; 
+  box-shadow: inset 0 0 4px 2px #ffffff44; 
+
+  font-family: 'Zilla Slab';
+  font-size: 1.5em;
+  text-align: center;
+  color: #fff;
+
+  user-select: none;
+}
