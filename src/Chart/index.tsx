@@ -2,12 +2,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 import './Chart.css';
 import { useState, useEffect } from 'react';
+
+import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable } from '@dnd-kit/core';
+import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+
 import { pitchSpeller } from './pitchSpeller';
+
+import { NoteCard } from '../NoteCard';
+import { ProgContext } from '../ModeContext';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
 const defaultScales: {[modeSetName: string]: {[modeName: string]: number[]}} = { 
-    "Diatonic": {
+  "Diatonic": {
     "lydian":     [0,2,4,6,7,9,11], 
     "ionian":     [0,2,4,5,7,9,11], 
     "mixolydian": [0,2,4,5,7,9,10], 
@@ -45,14 +52,13 @@ const defaultScales: {[modeSetName: string]: {[modeName: string]: number[]}} = {
   },
   "Other": {
     "whole-tone": [0,2,4,6,8,10],
-    "major blues": [0,2,3,4,7,9],
-    "minor blues": [0,3,5,6,7,10],
+    // "major blues": [0,2,3,4,7,9],
+    // "minor blues": [0,3,5,6,7,10],
+    // "pentatonic": [0,2,4,7,9],
     // "diminished": [0,2,3,5,6,8,9,11],
     // "chromatic": [0,1,2,3,4,5,6,7,8,9,10,11],
   }
 }
-
-const chars = ['C', 'C♯/D♭', 'D', 'D♯/E♭', 'E', 'F', 'F♯/G♭', 'G', 'G♯/A♭', 'A', 'A♯/B♭', 'B']
 
 const ScaleHeader = ({text}: {text: string}) => (
   <div className='headerRow'>
@@ -60,32 +66,47 @@ const ScaleHeader = ({text}: {text: string}) => (
   </div>
 )
 
-const ScaleRow = ({array}: {array: Array<{char: string, type: string, num: string}>}) => (
-  <div className='contentRow'>
-    { array ? array.map(chord => <NoteCard chord={chord}/>) : null}
-  </div>
-)
+export const ChordDraggable = ({chordCoords, chord, setFunc, children}: {chordCoords: {scale: string, index: number}, chord: any, setFunc: any, children: any}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    isDragging,
+  } = useDraggable({id: chord.id, data: {chordCoords: chordCoords, chord: chord, setFunc: setFunc}})
 
-const NoteCard = ({chord}: {chord: {char: string, type: string, num: string}}) => (
-  <div className='card'>
-    <div className={'cardContent ' + chord.type} >
-      <div className='cardNumber'>{chord.num}</div>
-      <div className='cardText'>{chord.char[0]}<span className='accidental'>{chord.char.slice(1,)}</span></div>
+  const dragStyle = { opacity: isDragging ? '0' : '1' }
+
+  return (
+    <div style={dragStyle} ref={setNodeRef} {...attributes} {...listeners}>
+      {children}
     </div>
+  )
+}
+
+const ScaleRow = ({scaleName, array, setFunc}: {scaleName: string, array: Array<{id: string, char: string, type: string, num: string}>, setFunc: any}) => (
+  <div className='contentRow'>
+    { 
+      array ? array.map((chord, i) => { 
+        const chordCoords = {scale: scaleName, index: i};
+        return (
+          <ChordDraggable chordCoords={chordCoords} chord={chord} setFunc={setFunc}>
+            <NoteCard chord={chord}/>
+          </ChordDraggable>
+        )
+      })
+      : null
+    }
   </div>
 )
 
 export const Chart = () => {
 
-  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: string, num: string}>} | undefined>(undefined)
   const [transpose, setTranspose] = useState<number>(0)
   const [modeSet, setModeSet] = useState<string>(Object.keys(defaultScales)[0])
+  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: string, num: string}>} | undefined>(undefined)
 
   useEffect(() => {
-    const scalesSpelled = pitchSpeller(defaultScales[modeSet], transpose)
-    console.log(scalesSpelled)
-
-    setScales(scalesSpelled)
+    setScales(pitchSpeller(defaultScales[modeSet], transpose))
   }, [modeSet, transpose]);
 
   return (
@@ -108,13 +129,13 @@ export const Chart = () => {
           scales ? (
             <>
               <div className='chartHeaders'>
-                { Object.keys(scales).map(scaleName => <ScaleHeader text={scaleName} />) }
+                { Object.keys(scales).map((scaleName: string) => <ScaleHeader text={scaleName} />) }
               </div>
               <div className='chartContent'>
-                { Object.values(scales).map(scaleChars => <ScaleRow array={scaleChars} />) }
+                { Object.keys(scales).map((scaleName: string) => <ScaleRow scaleName={scaleName} array={scales[scaleName]} setFunc={setScales} />) }
               </div>
             </>
-          ) : <></>
+          ) : <div>LOADING... or broken.</div>
         }
       </div>
     </>
