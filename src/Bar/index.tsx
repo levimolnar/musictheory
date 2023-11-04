@@ -10,7 +10,7 @@ import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 
 
-const SortableItem = ({item, setFunc}: {item: any, setFunc: any}) => {
+const SortableItem = ({index, chord, setFunc}: {index: number, chord: any, setFunc: any}) => {
   const {
     attributes,
     listeners,
@@ -18,16 +18,27 @@ const SortableItem = ({item, setFunc}: {item: any, setFunc: any}) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({id: item.id, data: {setFunc: setFunc}})
+  } = useSortable({
+    id: chord.id, 
+    // transition: {
+    //   duration: 300,
+    //   easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    // },
+    data: {payload: {index: index, chord: chord, setFunc: setFunc, origin: 'progBar'}}})
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? '.6' : '1',
+    filter: isDragging ? 'brightness(.8)' : 'none',
+
+    // display: "inline-block",
+    // marginRight: "12px",
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <NoteCard chord={item}/>
+      <NoteCard chord={chord}/>
     </div>
   )
 };
@@ -39,7 +50,7 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
     setNodeRef,
     transform,
     transition,
-  } = useSortable({id: id, disabled: true, data: {setFunc: setFunc}})
+  } = useSortable({id: id, disabled: true, data: {payload: {setFunc: setFunc, origin: 'progBar'}}})
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -56,6 +67,11 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const Bar = () => {
 
+  // {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
+  // {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
+  // {id: uuidv4(), char: 'A', type: 'min', num: 'vi'},
+  // {id: uuidv4(), char: 'F', type: 'maj', num: 'IV'},
+
   const [items, setItems] = useState<Array<{id: string, char: string, type: string, num: string}>>([
     {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
     {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
@@ -64,16 +80,29 @@ export const Bar = () => {
 
   const [uniqueBarId] = useState(uuidv4());
 
+  const [barWidth, setBarWidth] = useState<number>(0);
+  const [decreaseBool, setDecreaseBool] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    setDecreaseBool(barWidth > items.length*25 + (items.length-1)*7);
+    setBarWidth(items.length*25 + (items.length-1)*7);
+  }, [items]);
+  
+  const widthStyle = {
+    width: `${barWidth}px`,
+    transition: decreaseBool ? 'width 150ms' : 'none',
+  };
+
   return (
     <SortableContext
       items={items.map((i: any) => i.id)}
       strategy={horizontalListSortingStrategy} 
       id={'sortable-' + uniqueBarId}
     >
-      <div className='bar barBlur'>
+      <div className='bar barBlur' style={widthStyle}>
         {
           items.length
-            ? items.map((chord: any) => <SortableItem item={chord} setFunc={setItems}/>)
+            ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
             : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
 
         }

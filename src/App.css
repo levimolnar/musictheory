@@ -14,7 +14,8 @@
   left: 0;
   z-index: -1;
 
-  background: url(./Chart/noise.png) #888;
+  background: url(./Chart/noise.png) #222;
+  /* background: url(./Chart/noise.png) #e56f5a; */
 }
 
 #backdropB {
@@ -23,6 +24,7 @@
   right: 0;
   z-index: -1;
 
-  /* background: url(bg.jpeg) center/300%; */
-  background: url(./Chart/noise.png) #4e67cd;
+  background: url(bg2.jpeg) center/300%;
+  /* background: url(./Chart/noise.png) #4e67cd; */
+
 }

@@ -42,6 +42,8 @@
 }
 
 .chart {
+  width: max-content;
+  
   border-radius: 8px;
   border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
   background-color: #ffffff22;

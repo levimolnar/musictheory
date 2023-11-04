@@ -13,20 +13,23 @@
 }
 
 .bar {
-  width: min-content; height: 50px;
+  /* width: fit-content; height: 52px; */
+  height: 52px;
+  /* transition: width 150ms ease-in-out; */
+  
   padding: 0 10px 0 10px;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   gap: 7px;
   
   border-radius: 8px;
   border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
   background-color: #ffffff22;
 
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
   box-shadow: var(--defShadow);
 }
