@@ -1,9 +1,6 @@
 import './NoteCard.css';
 
-export const NoteCard = ({chord}: {chord: {id: string, char: string, type: string, num: string}}) => {
-
-  // if (!chord) return <></>
-  
+export const NoteCard = ({chord}: {chord: {id: string, char: string, type: string, num: string}}) => {  
   return (
     <div className={'cardContent ' + chord.type}>
       <div className='cardNumber'>{chord.num}</div>

@@ -12,14 +12,16 @@ function App() {
       <div id='backdropB' />
       <div>
         <ModeContext>
-          <Bar />
+          <Bar /> 
           <Chart />
         </ModeContext>
       </div>
       <div>
         <ModeContext>
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Bar /> <Bar />
+          {/* <div style={{display: 'flex'}}> */}
+            <Bar /> 
+            <Bar />
           </div>
           <Chart />
         </ModeContext>

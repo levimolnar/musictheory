@@ -62,8 +62,10 @@ export const Chart = () => {
     setScales(pitchSpeller(defScaleObj[modeSet], transpose))
   }, [modeSet, transpose]);
 
+  const [uniqueChartId] = useState(uuidv4());
+
   return (
-    <>
+    <div style={{width: 'min-content'}}>
       <div className='settingsBar blur'>
         <div style={{margin: '2px 0 2px 0', display: 'flex', borderRight: '2px solid #00000055'}}>
           <div style={{backgroundColor: '#333', color: '#fff', textAlign: 'center', width: '22px', height: '22px', lineHeight: '22px', borderRadius: '50%', fontSize: '.8em', margin: '1.5px 0 1.5px 10px', borderTop: '1px solid #ffffff88', borderRight: '1px solid #ffffff88'}}>{transpose}</div>
@@ -73,24 +75,23 @@ export const Chart = () => {
           </div>
         </div>
         <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '10px', paddingLeft: '5px', margin: '5px', outline: 'none', border: 'none'}} value={modeSet} onChange={(e: any) => setModeSet(e.target.value)}>
-          { Object.keys(defScaleObj).map(ms => <option value={ms}>{ms}</option>) }
+          { Object.keys(defScaleObj).map(ms => <option key={'option-' + ms} value={ms}>{ms}</option>) }
         </select>
       </div>
-
       <div className='chart blur'>
         { 
           scales ? (
             <>
               <div className='chartHeaders'>
-                { Object.keys(scales).map((scaleName: string) => <ScaleHeader text={scaleName} />) }
+                { Object.keys(scales).map((scaleName: string) => <ScaleHeader key={'header-' + scaleName + uniqueChartId} text={scaleName} />) }
               </div>
               <div className='chartContent'>
-                { Object.keys(scales).map((scaleName: string) => <ScaleRow scaleName={scaleName} array={scales[scaleName]} setFunc={setScales} />) }
+                { Object.keys(scales).map((scaleName: string) => <ScaleRow key={'content-' + scaleName + uniqueChartId} scaleName={scaleName} array={scales[scaleName]} setFunc={setScales} />) }
               </div>
             </>
           ) : <div style={{width: 'min-content', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
         }
       </div>
-    </>
+    </div>
   );
 }
