@@ -70,59 +70,57 @@ export const Bar = () => {
   // {id: uuidv4(), char: 'A', type: 'min', num: 'vi'},
   // {id: uuidv4(), char: 'F', type: 'maj', num: 'IV'},
 
-  // const [items, setItems] = useState<Array<{id: string, char: string, type: string, num: string}>>([
-  //   {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
-  //   {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
-  //   {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
-  // ]);
-
-  const [items, setItems] = useState(new Set([
+  const [items, setItems] = useState<Array<{id: string, char: string, type: string, num: string}>>([
     {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
     {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
     {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
-  ]));
+  ]);
+
+  // const [items, setItems] = useState(new Set([
+  //   {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
+  //   {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
+  //   {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
+  // ]));
 
   const [uniqueBarId] = useState(uuidv4());
 
   const [barWidth, setBarWidth] = useState<number>(0);
   const [decreaseBool, setDecreaseBool] = useState<boolean | undefined>(undefined);
 
-  // useEffect(() => {
-  //   setDecreaseBool(barWidth > items.length*25 + (items.length-1)*7);
-  //   setBarWidth(items.length*25 + (items.length-1)*7);
-  // }, [items]);
-
   useEffect(() => {
-    setDecreaseBool(barWidth > items.size*25 + (items.size-1)*7);
-    setBarWidth(items.size*25 + (items.size-1)*7);
+    setDecreaseBool(barWidth > items.length*25 + (items.length-1)*7);
+    setBarWidth(items.length*25 + (items.length-1)*7);
   }, [items]);
+
+  // useEffect(() => {
+  //   setDecreaseBool(barWidth > items.size*25 + (items.size-1)*7);
+  //   setBarWidth(items.size*25 + (items.size-1)*7);
+  // }, [items]);
   
   const widthStyle = {
     width: `${barWidth}px`,
     transition: decreaseBool ? 'width 100ms ease-out' : 'none',
   };
 
-  console.log(items);
-
   return (
     <StrictMode>
       <SortableContext
-        // items={items.map((i: any) => i.id)}
-        items={[...items].map((i: any) => i.id)}
+        items={items.map((i: any) => i.id)}
+        // items={[...items].map((i: any) => i.id)}
         strategy={horizontalListSortingStrategy} 
         id={'sortable-' + uniqueBarId}
       >
         <div className='bar barBlur' style={widthStyle}>
-          {/* {
+          {
             items.length
               ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
               : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
-          } */}
-          {
+          }
+          {/* {
             items.size
               ? [...items].map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
               : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
-          }
+          } */}
         </div>
       </SortableContext>
     </StrictMode>

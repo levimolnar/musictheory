@@ -13,11 +13,27 @@ import { defScaleObj } from './defScaleObj';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
-const ScaleHeader = ({text}: {text: string}) => (
-  <div className='headerRow'>
-    <span className='modeTag'>{text}</span>
-  </div>
-)
+const ScaleHeader = ({text}: {text: string}) => {
+  const BravuraChars = [
+    "\uED60", // flat
+    "\uED61", // natural
+    "\uED62", // sharp
+    "\uED63", // double sharp
+    "\uED64", // double flat
+  ];
+
+  return (
+    <div className='headerRow'>
+      <span className='modeTag'>
+        {[...text].map((char: string) => (BravuraChars.includes(char)) 
+          ? <span style={{fontFamily: 'Bravura', letterSpacing: '2px'}}>{char}</span> 
+          : char
+        )}
+      </span>
+    </div>
+  )
+}
+  
 
 export const ChordDraggable = ({chordDir, chord, setFunc, children}: {chordDir: {scale: string, index: number}, chord: any, setFunc: any, children: any}) => {
   const {

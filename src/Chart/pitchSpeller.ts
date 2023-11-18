@@ -1,13 +1,23 @@
 import { v4 as uuidv4 } from 'uuid';
 
+// const noteMatrix: Array<Array<{'number': number, 'char': string}>> = [
+//   [{'number': 10,'char': 'C𝄫'}, {'number': 11,'char': 'C♭'}, {'number': 0, 'char': 'C'}, {'number': 1, 'char': 'C♯'}, {'number': 2, 'char': 'C𝄪'}],
+//   [{'number': 0, 'char': 'D𝄫'}, {'number': 1, 'char': 'D♭'}, {'number': 2, 'char': 'D'}, {'number': 3, 'char': 'D♯'}, {'number': 4, 'char': 'D𝄪'}],
+//   [{'number': 2, 'char': 'E𝄫'}, {'number': 3, 'char': 'E♭'}, {'number': 4, 'char': 'E'}, {'number': 5, 'char': 'E♯'}, {'number': 6, 'char': 'E𝄪'}],
+//   [{'number': 3, 'char': 'F𝄫'}, {'number': 4, 'char': 'F♭'}, {'number': 5, 'char': 'F'}, {'number': 6, 'char': 'F♯'}, {'number': 7, 'char': 'F𝄪'}],
+//   [{'number': 5, 'char': 'G𝄫'}, {'number': 6, 'char': 'G♭'}, {'number': 7, 'char': 'G'}, {'number': 8, 'char': 'G♯'}, {'number': 9, 'char': 'G𝄪'}],
+//   [{'number': 7, 'char': 'A𝄫'}, {'number': 8, 'char': 'A♭'}, {'number': 9, 'char': 'A'}, {'number': 10,'char': 'A♯'}, {'number': 11,'char': 'A𝄪'}],
+//   [{'number': 9, 'char': 'B𝄫'}, {'number': 10,'char': 'B♭'}, {'number': 11,'char': 'B'}, {'number': 0, 'char': 'B♯'}, {'number': 1, 'char': 'B𝄪'}],
+// ]
+
 const noteMatrix: Array<Array<{'number': number, 'char': string}>> = [
-  [{'number': 10,'char': 'C𝄫'}, {'number': 11,'char': 'C♭'}, {'number': 0, 'char': 'C'}, {'number': 1, 'char': 'C♯'}, {'number': 2, 'char': 'C𝄪'}],
-  [{'number': 0, 'char': 'D𝄫'}, {'number': 1, 'char': 'D♭'}, {'number': 2, 'char': 'D'}, {'number': 3, 'char': 'D♯'}, {'number': 4, 'char': 'D𝄪'}],
-  [{'number': 2, 'char': 'E𝄫'}, {'number': 3, 'char': 'E♭'}, {'number': 4, 'char': 'E'}, {'number': 5, 'char': 'E♯'}, {'number': 6, 'char': 'E𝄪'}],
-  [{'number': 3, 'char': 'F𝄫'}, {'number': 4, 'char': 'F♭'}, {'number': 5, 'char': 'F'}, {'number': 6, 'char': 'F♯'}, {'number': 7, 'char': 'F𝄪'}],
-  [{'number': 5, 'char': 'G𝄫'}, {'number': 6, 'char': 'G♭'}, {'number': 7, 'char': 'G'}, {'number': 8, 'char': 'G♯'}, {'number': 9, 'char': 'G𝄪'}],
-  [{'number': 7, 'char': 'A𝄫'}, {'number': 8, 'char': 'A♭'}, {'number': 9, 'char': 'A'}, {'number': 10,'char': 'A♯'}, {'number': 11,'char': 'A𝄪'}],
-  [{'number': 9, 'char': 'B𝄫'}, {'number': 10,'char': 'B♭'}, {'number': 11,'char': 'B'}, {'number': 0, 'char': 'B♯'}, {'number': 1, 'char': 'B𝄪'}],
+  [{'number': 10,'char': 'C\uED64'}, {'number': 11,'char': 'C\uED60'}, {'number': 0, 'char': 'C'}, {'number': 1, 'char': 'C\uED62'}, {'number': 2, 'char': 'C\uED63'}],
+  [{'number': 0, 'char': 'D\uED64'}, {'number': 1, 'char': 'D\uED60'}, {'number': 2, 'char': 'D'}, {'number': 3, 'char': 'D\uED62'}, {'number': 4, 'char': 'D\uED63'}],
+  [{'number': 2, 'char': 'E\uED64'}, {'number': 3, 'char': 'E\uED60'}, {'number': 4, 'char': 'E'}, {'number': 5, 'char': 'E\uED62'}, {'number': 6, 'char': 'E\uED63'}],
+  [{'number': 3, 'char': 'F\uED64'}, {'number': 4, 'char': 'F\uED60'}, {'number': 5, 'char': 'F'}, {'number': 6, 'char': 'F\uED62'}, {'number': 7, 'char': 'F\uED63'}],
+  [{'number': 5, 'char': 'G\uED64'}, {'number': 6, 'char': 'G\uED60'}, {'number': 7, 'char': 'G'}, {'number': 8, 'char': 'G\uED62'}, {'number': 9, 'char': 'G\uED63'}],
+  [{'number': 7, 'char': 'A\uED64'}, {'number': 8, 'char': 'A\uED60'}, {'number': 9, 'char': 'A'}, {'number': 10,'char': 'A\uED62'}, {'number': 11,'char': 'A\uED63'}],
+  [{'number': 9, 'char': 'B\uED64'}, {'number': 10,'char': 'B\uED60'}, {'number': 11,'char': 'B'}, {'number': 0, 'char': 'B\uED62'}, {'number': 1, 'char': 'B\uED63'}],
 ]
 
 const positions: Array<Array<[number, number]>> = [
@@ -25,10 +35,8 @@ const positions: Array<Array<[number, number]>> = [
   [[6,2], [0,1], [5,4]],
 ]
 
-const accTransform = (a: number) => {
-  // Function transforms y-index in matrix to degree of accidental. e.g. [0,1,2,3,4] -> [2,1,0,1,2]
-  return Math.abs(a-2)
-}
+// Function transforms y-index in matrix to degree of accidental. e.g. [0,1,2,3,4] -> [2,1,0,1,2]
+const accTransform = (a: number) => Math.abs(a-2);
 
 const getChordType = (arr: number[], i: number) => {
   

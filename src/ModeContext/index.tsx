@@ -42,7 +42,8 @@ export const ModeContext = ({children}: {children: any}) => {
         console.log('remove from sortable');
 
         // remove based on ID, can't remove wrong index.
-        active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
+        active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+        // active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
 
         setBlocked(false);
         throttle();
@@ -55,7 +56,8 @@ export const ModeContext = ({children}: {children: any}) => {
     if (active.data.current.hasOwnProperty("sortable") && active.data.current.sortable.containerId !== over.data.current.sortable.containerId) {
       // in case sortables are next to eachother and draggable does not meet !over, still remove item.
 
-      active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
+      active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+      // active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
 
       setBlocked(false);
       throttle();
@@ -75,17 +77,17 @@ export const ModeContext = ({children}: {children: any}) => {
       
       if (duplicateIndex === -1 && !blocked) {
 
-        // setItemsFunc((items: any) => items.toSpliced(newIndex, 0, {...payloadStorage.chord, id: dragId}));
+        setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, id: dragId}, ...items.slice(newIndex)]);
         // @ts-ignore
-        setItemsFunc((items: any) => new Set([...items].toSpliced(newIndex, 0, {...payloadStorage.chord, id: dragId})));
+        // setItemsFunc((items: any) => new Set([...items].toSpliced(newIndex, 0, {...payloadStorage.chord, id: dragId})));
         setBlocked(true);
         throttle();
         return;
 
       } else {
         
-        // setItemsFunc((items: any) => arrayMove(items, duplicateIndex, newIndex));
-        setItemsFunc((items: any) => new Set(arrayMove([...items], duplicateIndex, newIndex)));
+        setItemsFunc((items: any) => arrayMove(items, duplicateIndex, newIndex));
+        // setItemsFunc((items: any) => new Set(arrayMove([...items], duplicateIndex, newIndex)));
         throttle();
         return;
       };
@@ -113,8 +115,8 @@ export const ModeContext = ({children}: {children: any}) => {
       const oldIndex = active.data.current.sortable.index;  // !
       const newIndex = over.data.current.sortable.index;
 
-      // over.data.current.payload.setFunc((items: any) => arrayMove(items, oldIndex, newIndex));
-      over.data.current.payload.setFunc((items: any) => new Set(arrayMove([...items], oldIndex, newIndex)));
+      over.data.current.payload.setFunc((items: any) => arrayMove(items, oldIndex, newIndex));
+      // over.data.current.payload.setFunc((items: any) => new Set(arrayMove([...items], oldIndex, newIndex)));
       return
     }
 
