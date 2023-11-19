@@ -1,0 +1,31 @@
+// export const chordIntervals: {[key: number]: string} = {
+//   33: "Diminished",
+//   34: "Minor",
+//   43: "Major",
+//   44: "Augmented",
+//   333: "Diminished 7th",
+//   334: "Half-diminished 7th",
+//   343: "Minor 7th",
+//   344: "Minor major 7th",
+//   433: "Dominant 7th",
+//   434: "Major 7th",
+//   442: "Augmented 7th",
+//   443: "Augmented major 7th",
+//   444: "Augmented",
+// }
+
+export const chordIntervals: {[key: number]: string} = {
+  33:  "dim",
+  34:  "min",
+  43:  "maj",
+  44:  "aug",
+  333: "dim7",
+  334: "hdim7",
+  343: "min7",
+  344: "minmaj7",
+  433: "dom7",
+  434: "maj7",
+  442: "aug7",
+  443: "augmaj7",
+  444: "aug",
+}

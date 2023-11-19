@@ -9,7 +9,6 @@ import { NoteCard } from '../NoteCard';
 import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 
-
 const SortableItem = ({index, chord, setFunc}: {index: number, chord: any, setFunc: any}) => {
   const {
     attributes,
@@ -65,38 +64,31 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const Bar = () => {
 
-  // {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
-  // {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
-  // {id: uuidv4(), char: 'A', type: 'min', num: 'vi'},
-  // {id: uuidv4(), char: 'F', type: 'maj', num: 'IV'},
-
   const [items, setItems] = useState<Array<{id: string, char: string, type: string, num: string}>>([
+    // {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
+    // {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
+    // {id: uuidv4(), char: 'A', type: 'min', num: 'vi'},
+    // {id: uuidv4(), char: 'F', type: 'maj', num: 'IV'},
     {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
     {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
     {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
   ]);
-
-  // const [items, setItems] = useState(new Set([
-  //   {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
-  //   {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
-  //   {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
-  // ]));
 
   const [uniqueBarId] = useState(uuidv4());
 
   const [barWidth, setBarWidth] = useState<number>(0);
   const [decreaseBool, setDecreaseBool] = useState<boolean | undefined>(undefined);
 
+  const NOTE_CARD_WIDTH = 25;
+  const MARGIN_WIDTH = 7;
+
+  // check if width change is increase or decrease, 
   useEffect(() => {
-    setDecreaseBool(barWidth > items.length*25 + (items.length-1)*7);
-    setBarWidth(items.length*25 + (items.length-1)*7);
+    setDecreaseBool(barWidth > items.length*NOTE_CARD_WIDTH + (items.length-1)*MARGIN_WIDTH);
+    setBarWidth(items.length*NOTE_CARD_WIDTH + (items.length-1)*MARGIN_WIDTH);
   }, [items]);
 
-  // useEffect(() => {
-  //   setDecreaseBool(barWidth > items.size*25 + (items.size-1)*7);
-  //   setBarWidth(items.size*25 + (items.size-1)*7);
-  // }, [items]);
-  
+  // apply transition effect only in case of width decrease
   const widthStyle = {
     width: `${barWidth}px`,
     transition: decreaseBool ? 'width 100ms ease-out' : 'none',
@@ -116,11 +108,6 @@ export const Bar = () => {
               ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
               : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
           }
-          {/* {
-            items.size
-              ? [...items].map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
-              : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
-          } */}
         </div>
       </SortableContext>
     </StrictMode>

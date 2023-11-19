@@ -31,10 +31,10 @@
   position: absolute;
   top: 2px; left: 4px;
   
-  font-weight: bold;
   text-align: left;
 
   font-family: 'Trebuchet MS';
+  font-weight: bold;
   font-size: .6em;
 }
 
@@ -63,11 +63,51 @@
   font-family: 'Bravura';
 }
 
+.unknown { background-color: hsl(0,   0%,  50%) }
 .dim     { background-color: hsl(195, 70%, 44%) }
 .min     { background-color: hsl(195, 70%, 72%) }
 .maj     { background-color: hsl(40,  5%,  82%) }
 .aug     { background-color: hsl(15,  70%, 64%) }
-.unknown { background-color: hsl(0,   0%,  50%) }
+
+/* 
+.dim7    { background-color: hsl(195, 70%, 44%) }
+.hdim7   { background-color: hsl(195, 70%, 44%) }
+.min7    { background-color: hsl(195, 70%, 72%) }
+.minmaj7 { background-color: hsl(195, 70%, 72%) }
+.dom7    { background-color: hsl(40,  5%,  82%) }
+.maj7    { background-color: hsl(40,  5%,  82%) }
+.aug7    { background-color: hsl(15,  70%, 64%) }
+.augmaj7 { background-color: hsl(15,  70%, 64%) } 
+*/
+
+/* 
+.dim7    { background-color: hsl(0, 100%, 100%) }
+.hdim7   { background-color: hsl(0, 100%, 100%) }
+.min7    { background-color: hsl(0, 100%, 100%) }
+.minmaj7 { background-color: hsl(0, 100%, 100%) }
+.dom7    { background-color: hsl(0, 100%, 100%) }
+.maj7    { background-color: hsl(0, 100%, 100%) }
+.aug7    { background-color: hsl(0, 100%, 100%) }
+.augmaj7 { background-color: hsl(0, 100%, 100%) } 
+*/
+
+/* .dim7    { background-color: hsl(0,   60%, 70%) }
+.hdim7   { background-color: hsl(45,  60%, 70%) }
+.min7    { background-color: hsl(90,  60%, 70%) }
+.minmaj7 { background-color: hsl(135, 60%, 70%) }
+.dom7    { background-color: hsl(180, 60%, 70%) }
+.maj7    { background-color: hsl(225, 60%, 70%) }
+.aug7    { background-color: hsl(270, 60%, 70%) }
+.augmaj7 { background-color: hsl(315, 60%, 70%) } */
+
+.maj7    { background-color: hsl(0,   60%, 70%) }
+.aug7    { background-color: hsl(45,  60%, 70%) }
+.augmaj7 { background-color: hsl(90,  60%, 70%) }
+.dim7    { background-color: hsl(135, 60%, 70%) }
+.hdim7   { background-color: hsl(180, 60%, 70%) }
+.min7    { background-color: hsl(225, 60%, 70%) }
+.minmaj7 { background-color: hsl(270, 60%, 70%) }
+.dom7    { background-color: hsl(315, 60%, 70%) }
 
 .empty { 
   width: 21.5px; height: 31px;

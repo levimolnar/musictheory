@@ -7,6 +7,7 @@ import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable }
 import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 
 import { pitchSpeller } from './pitchSpeller';
+import ChordTree from './chordTree';
 
 import { NoteCard } from '../NoteCard';
 import { defScaleObj } from './defScaleObj';
@@ -76,6 +77,27 @@ export const Chart = () => {
 
   useEffect(() => {
     setScales(pitchSpeller(defScaleObj[modeSet], transpose))
+
+    const chordTree = new ChordTree();
+    chordTree.insertChord([3, 3], 'Diminished');
+    chordTree.insertChord([3, 4], 'Minor');
+    chordTree.insertChord([4, 3], 'Major');
+    chordTree.insertChord([4, 4], 'Augmented');
+    chordTree.insertChord([3, 3, 3], 'Diminished 7th');
+    chordTree.insertChord([3, 3, 4], 'Half-diminished 7th');
+    chordTree.insertChord([3, 4, 3], 'Minor 7th');
+    chordTree.insertChord([3, 4, 4], 'Minor major 7th');
+    chordTree.insertChord([4, 3, 3], 'Dominant 7th');
+    chordTree.insertChord([4, 3, 4], 'Major 7th');
+    chordTree.insertChord([4, 4, 2], 'Augmented 7th');
+    chordTree.insertChord([4, 4, 3], 'Augmented major 7th');
+
+    console.log(chordTree);
+
+    // console.log(chordTree.findChord([4, 3, 4])); // Should return 'Major 7th'
+    // console.log(chordTree.findChord([3, 4, 3])); // Should return 'Minor 7th'
+    // console.log(chordTree.findChord([4, 3, 5])); // Should return null (Chord not found)
+
   }, [modeSet, transpose]);
 
   const [uniqueChartId] = useState(uuidv4());

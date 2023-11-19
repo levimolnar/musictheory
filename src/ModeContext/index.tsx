@@ -39,11 +39,10 @@ export const ModeContext = ({children}: {children: any}) => {
 
       if (active.data.current.sortable) {
         // if from sortable, remove card at index from sortable
-        console.log('remove from sortable');
+        // console.log('remove from sortable');
 
         // remove based on ID, can't remove wrong index.
         active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
-        // active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
 
         setBlocked(false);
         throttle();
@@ -57,37 +56,33 @@ export const ModeContext = ({children}: {children: any}) => {
       // in case sortables are next to eachother and draggable does not meet !over, still remove item.
 
       active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
-      // active.data.current.payload.setFunc((items: any) => new Set([...items].filter((chord: any) => chord.id !== active.data.current.payload.chord.id)));
 
       setBlocked(false);
       throttle();
       return
     };
 
-    if (payloadStorage.chord) {
-      console.log('add to sortable / swap');
-
-      if (throttled) return
+    if (payloadStorage.chord && !throttled) {
 
       const {index: newIndex, items } = over.data.current.sortable;
       const setItemsFunc = over.data.current.payload.setFunc;
 
-      // const duplicateIndex = items.findIndex((i: any) => i.id === dragId);
       const duplicateIndex = items.findIndex((id: any) => id === dragId);
       
       if (duplicateIndex === -1 && !blocked) {
+        // console.log('add to sortable');
 
         setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, id: dragId}, ...items.slice(newIndex)]);
-        // @ts-ignore
-        // setItemsFunc((items: any) => new Set([...items].toSpliced(newIndex, 0, {...payloadStorage.chord, id: dragId})));
+
         setBlocked(true);
         throttle();
         return;
 
       } else {
+        // console.log('swap cards');
         
         setItemsFunc((items: any) => arrayMove(items, duplicateIndex, newIndex));
-        // setItemsFunc((items: any) => new Set(arrayMove([...items], duplicateIndex, newIndex)));
+
         throttle();
         return;
       };
@@ -110,7 +105,7 @@ export const ModeContext = ({children}: {children: any}) => {
     // if (payloadStorage.origin === 'progBar' && over.data.current.sortable) {
     if (payloadStorage.origin === 'progBar' && active.data.current.sortable && over.data.current.sortable) {
 
-      console.log('sortable -> sortable')
+      // console.log('sortable -> sortable')
 
       const oldIndex = active.data.current.sortable.index;  // !
       const newIndex = over.data.current.sortable.index;
@@ -121,7 +116,7 @@ export const ModeContext = ({children}: {children: any}) => {
     }
 
     if (payloadStorage.origin === 'chart' && over.data.current.sortable) {
-      console.log('chart -> sortable')
+      // console.log('chart -> sortable')
 
       // payloadStorage.setFunc((prevScales: any) => {
       //   const newScales = {...prevScales};

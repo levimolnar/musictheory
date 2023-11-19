@@ -4,6 +4,11 @@
 // double sharp:  \uED63
 // double flat:   \uED64
 
+// half-diminished 7: \uF4D7
+// diminished 7:      \uF4D8
+// augmented 7:       \uF4D9
+// major 7:           \uF4DA
+
 // object with scale recipes (ordered by brightness)
 export const defScaleObj: {[modeSetName: string]: {[modeName: string]: number[]}} = { 
   "Diatonic": {

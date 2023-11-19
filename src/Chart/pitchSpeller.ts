@@ -1,14 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
-// const noteMatrix: Array<Array<{'number': number, 'char': string}>> = [
-//   [{'number': 10,'char': 'C𝄫'}, {'number': 11,'char': 'C♭'}, {'number': 0, 'char': 'C'}, {'number': 1, 'char': 'C♯'}, {'number': 2, 'char': 'C𝄪'}],
-//   [{'number': 0, 'char': 'D𝄫'}, {'number': 1, 'char': 'D♭'}, {'number': 2, 'char': 'D'}, {'number': 3, 'char': 'D♯'}, {'number': 4, 'char': 'D𝄪'}],
-//   [{'number': 2, 'char': 'E𝄫'}, {'number': 3, 'char': 'E♭'}, {'number': 4, 'char': 'E'}, {'number': 5, 'char': 'E♯'}, {'number': 6, 'char': 'E𝄪'}],
-//   [{'number': 3, 'char': 'F𝄫'}, {'number': 4, 'char': 'F♭'}, {'number': 5, 'char': 'F'}, {'number': 6, 'char': 'F♯'}, {'number': 7, 'char': 'F𝄪'}],
-//   [{'number': 5, 'char': 'G𝄫'}, {'number': 6, 'char': 'G♭'}, {'number': 7, 'char': 'G'}, {'number': 8, 'char': 'G♯'}, {'number': 9, 'char': 'G𝄪'}],
-//   [{'number': 7, 'char': 'A𝄫'}, {'number': 8, 'char': 'A♭'}, {'number': 9, 'char': 'A'}, {'number': 10,'char': 'A♯'}, {'number': 11,'char': 'A𝄪'}],
-//   [{'number': 9, 'char': 'B𝄫'}, {'number': 10,'char': 'B♭'}, {'number': 11,'char': 'B'}, {'number': 0, 'char': 'B♯'}, {'number': 1, 'char': 'B𝄪'}],
-// ]
+import { chordIntervals } from './chordIntervals';
 
 const noteMatrix: Array<Array<{'number': number, 'char': string}>> = [
   [{'number': 10,'char': 'C\uED64'}, {'number': 11,'char': 'C\uED60'}, {'number': 0, 'char': 'C'}, {'number': 1, 'char': 'C\uED62'}, {'number': 2, 'char': 'C\uED63'}],
@@ -42,18 +33,27 @@ const getChordType = (arr: number[], i: number) => {
   
   const negativeFix = (n: number) => (Math.sign(n) === -1) ? n += 12 : n
 
-  var int1 = negativeFix(arr[(i+2) % arr.length] - arr[i])
-  var int2 = negativeFix(arr[(i+4) % arr.length] - arr[(i+2) % arr.length])
+  const interval1 = negativeFix(arr[(i+2) % arr.length] - arr[i]);
+  const interval2 = negativeFix(arr[(i+4) % arr.length] - arr[(i+2) % arr.length]);
+  const interval3 = negativeFix(arr[(i+6) % arr.length] - arr[(i+4) % arr.length]);
+  const intHash = Number("" + interval1 + interval2 + interval3);
 
-  if (int1 === 3) {
-    if (int2 === 3) return "dim"
-    if (int2 === 4) return "min"
-    else return "unknown"
-  } else if (int1 === 4) {
-    if (int2 === 3) return "maj"
-    if (int2 === 4) return "aug"
-    else return "unknown"
-  } else return "unknown"
+  // const interval1 = negativeFix(arr[(i+2) % arr.length] - arr[i]);
+  // const interval2 = negativeFix(arr[(i+4) % arr.length] - arr[(i+2) % arr.length]);
+  // const intHash = Number("" + interval1 + interval2);
+
+  console.log(chordIntervals[intHash]);
+  return chordIntervals[intHash] ? chordIntervals[intHash] : "unknown";
+
+  // if (interval1 === 3) {
+  //   if (interval2 === 3) return "dim"
+  //   if (interval2 === 4) return "min"
+  //   else return "unknown"
+  // } else if (interval1 === 4) {
+  //   if (interval2 === 3) return "maj"
+  //   if (interval2 === 4) return "aug"
+  //   else return "unknown"
+  // } else return "unknown"
 }
 
 const getNumeral = (type: string | undefined, i: number) => {
@@ -61,10 +61,10 @@ const getNumeral = (type: string | undefined, i: number) => {
 
   const numeral = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
 
-  if (type === "dim") return numeral[i] + "o"  // + "ᴼ"
+  if (type === "dim") return numeral[i] + "o"
   if (type === "min") return numeral[i]
   if (type === "maj") return numeral[i].toUpperCase()
-  if (type === "aug") return numeral[i].toUpperCase() + "+"  // + "⁺"
+  if (type === "aug") return numeral[i].toUpperCase() + "+"
 }
 
 export const pitchSpeller = (scales: {[key: string]: number[]}, transpose: number) => {
