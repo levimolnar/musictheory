@@ -41,30 +41,29 @@ const getChordType = (arr: number[], i: number) => {
   // const interval1 = negativeFix(arr[(i+2) % arr.length] - arr[i]);
   // const interval2 = negativeFix(arr[(i+4) % arr.length] - arr[(i+2) % arr.length]);
   // const intHash = Number("" + interval1 + interval2);
+  // console.log(chordIntervals[intHash]);
 
-  console.log(chordIntervals[intHash]);
-  return chordIntervals[intHash] ? chordIntervals[intHash] : "unknown";
-
-  // if (interval1 === 3) {
-  //   if (interval2 === 3) return "dim"
-  //   if (interval2 === 4) return "min"
-  //   else return "unknown"
-  // } else if (interval1 === 4) {
-  //   if (interval2 === 3) return "maj"
-  //   if (interval2 === 4) return "aug"
-  //   else return "unknown"
-  // } else return "unknown"
+  return chordIntervals[intHash];
 }
 
 const getNumeral = (type: string | undefined, i: number) => {
   if (!type) return ""
 
-  const numeral = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
+  const numeral = ["i", "ii", "iii", "iv", "v", "vi", "vii"];
 
   if (type === "dim") return numeral[i] + "o"
+  if (type === "dim7") return numeral[i] + "o"
+  if (type === "hdim7") return numeral[i] + "o"
   if (type === "min") return numeral[i]
+  if (type === "min7") return numeral[i]
+  if (type === "minmaj7") return numeral[i]
   if (type === "maj") return numeral[i].toUpperCase()
+  if (type === "maj7") return numeral[i].toUpperCase()
+  if (type === "dom7") return numeral[i].toUpperCase()
   if (type === "aug") return numeral[i].toUpperCase() + "+"
+  if (type === "aug7") return numeral[i].toUpperCase() + "+"
+  if (type === "augmaj7") return numeral[i].toUpperCase() + "+"
+
 }
 
 export const pitchSpeller = (scales: {[key: string]: number[]}, transpose: number) => {
@@ -93,7 +92,7 @@ export const pitchSpeller = (scales: {[key: string]: number[]}, transpose: numbe
 
       for (let j = 0; j < scaleLength; j++) {
         const chordType = getChordType(scales[scaleName], j)
-        chordTypes.push({type: chordType, num: getNumeral(chordType, j)})
+        chordTypes.push({type: chordType, num: getNumeral(chordType.short, j)})
       }
 
       const resultArray = []

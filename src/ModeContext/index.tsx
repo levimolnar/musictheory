@@ -27,12 +27,13 @@ export const ModeContext = ({children}: {children: any}) => {
     setBlocked(false);
     setThrottled(false);
     setDragId(active.id); 
-    if (active.data.current.payload) { setPayloadStorage(active.data.current.payload) };
+    if (active.data.current.payload) setPayloadStorage(active.data.current.payload);
   }
 
   const handleDragOver = ({active, over}: any) => {
 
     if (!payloadStorage) return;
+    console.log(payloadStorage);
 
     if (!over || !over.data.current) {
       // if object hovered over is not drop zone
@@ -72,7 +73,8 @@ export const ModeContext = ({children}: {children: any}) => {
       if (duplicateIndex === -1 && !blocked) {
         // console.log('add to sortable');
 
-        setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, id: dragId}, ...items.slice(newIndex)]);
+        // setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, id: dragId}, ...items.slice(newIndex)]);
+        setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, seventh: payloadStorage.seventh, id: dragId}, ...items.slice(newIndex)]);
 
         setBlocked(true);
         throttle();
@@ -140,7 +142,7 @@ export const ModeContext = ({children}: {children: any}) => {
       onDragEnd={handleDragEnd}
     >
       {children}
-      {payloadStorage ? <DragOverlay><NoteCard chord={payloadStorage.chord}/></DragOverlay> : <></>}
+      {payloadStorage ? <DragOverlay><NoteCard chord={payloadStorage.chord} seventh={payloadStorage.seventh}/></DragOverlay> : <></>}
     </DndContext>
   );
 }

@@ -9,7 +9,7 @@ import { NoteCard } from '../NoteCard';
 import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 
-const SortableItem = ({index, chord, setFunc}: {index: number, chord: any, setFunc: any}) => {
+const SortableItem = ({index, chord, setFunc, seventh}: {index: number, chord: any, setFunc: any, seventh: boolean}) => {
   const {
     attributes,
     listeners,
@@ -23,7 +23,7 @@ const SortableItem = ({index, chord, setFunc}: {index: number, chord: any, setFu
     //   duration: 300,
     //   easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
     // },
-    data: {payload: {index: index, chord: chord, setFunc: setFunc, origin: 'progBar',}}
+    data: {payload: {index, chord, setFunc, origin: 'progBar', seventh}}
   })
 
   const style = {
@@ -35,7 +35,7 @@ const SortableItem = ({index, chord, setFunc}: {index: number, chord: any, setFu
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <NoteCard chord={chord}/>
+      <NoteCard chord={chord} seventh={seventh}/>
     </div>
   )
 };
@@ -61,17 +61,12 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
   )
 };
 
-
 export const Bar = () => {
 
-  const [items, setItems] = useState<Array<{id: string, char: string, type: string, num: string}>>([
-    // {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
-    // {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
-    // {id: uuidv4(), char: 'A', type: 'min', num: 'vi'},
-    // {id: uuidv4(), char: 'F', type: 'maj', num: 'IV'},
-    {id: uuidv4(), char: 'D', type: 'min', num: 'ii'},
-    {id: uuidv4(), char: 'G', type: 'maj', num: 'V'},
-    {id: uuidv4(), char: 'C', type: 'maj', num: 'I'},
+  const [items, setItems] = useState<Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string, seventh: boolean}>>([
+    {id: uuidv4(), char: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: false},
+    {id: uuidv4(), char: 'G', type: {full: "Major", short: "maj", symbol: ""}, num: 'V', seventh: false},
+    {id: uuidv4(), char: 'C', type: {full: "Major", short: "maj", symbol: ""}, num: 'I', seventh: false},
   ]);
 
   const [uniqueBarId] = useState(uuidv4());
@@ -90,7 +85,8 @@ export const Bar = () => {
 
   // apply transition effect only in case of width decrease
   const widthStyle = {
-    width: `${barWidth}px`,
+    // width: `${barWidth}px`,
+    width: 'min-content',
     transition: decreaseBool ? 'width 100ms ease-out' : 'none',
   };
 
@@ -105,7 +101,7 @@ export const Bar = () => {
         <div className='bar barBlur' style={widthStyle}>
           {
             items.length
-              ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems}/>)
+              ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems} seventh={chord.seventh}/>)
               : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
           }
         </div>

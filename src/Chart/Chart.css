@@ -50,6 +50,24 @@
   color: #fff;
 }
 
+.seventhButton {
+  margin: 5px 10px 5px auto; 
+  width: 31px;
+  line-height: 17px;
+  text-align: center;
+  border-radius: 5px;
+  font-family: 'Trebuchet MS';
+  font-size: .8em; 
+  font-weight: bold;
+  filter: drop-shadow(-2px 2px 3px #00000055);
+  cursor: pointer;
+  user-select: none;
+}
+
+.seventhButton:hover {
+  filter: invert();
+}
+
 .chart {
   width: max-content;
   
@@ -95,7 +113,9 @@
 .modeTag {
   height: 19px;
 
+  /* font-family: 'Calibri'; */
   font-family: 'Lacquer';
+
   line-height: 17px;
   font-size: 1em;
 

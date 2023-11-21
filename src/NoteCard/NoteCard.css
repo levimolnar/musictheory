@@ -1,8 +1,7 @@
 .cardContent {
+  height: 35px;
+  /* position: relative; */
   z-index: 1;
-  position: relative;
-
-  width: 25px; height: 35px;
 
   outline: 1px solid #00000088;
   border-radius: 4px;
@@ -11,6 +10,10 @@
 
   cursor: grab;
   user-select: none;
+
+  overflow: hidden;
+
+  /* background: linear-gradient(180deg, transparent 33%, #ffffff44 66%); */
 }
 
 /* .bar > div:nth-child(3) > .cardContent {
@@ -28,39 +31,38 @@
 .cardNumber {
   color: #000;
 
-  position: absolute;
-  top: 2px; left: 4px;
-  
-  text-align: left;
+  padding-top: 3px;
 
   font-family: 'Trebuchet MS';
   font-weight: bold;
-  font-size: .6em;
+  font-size: .5em;
 }
 
-.cardText {
-  position: absolute;
-  top: 12.5px; left: 3px;
+.textContainer {
+  white-space: nowrap;
+  height: 19px;
 
-  width: 19px; height: 19px;
-  line-height: 19px;
+  margin: 1px 3px 0 3px;
 
-  background: linear-gradient(transparent 33%, #ffffff66);
-  border-radius: 50%;
+  border-radius: 8px;
+}
 
-  text-align: center;
+.rootText {
+  width: min-content;
+  line-height: 18px;
   
-  font-family: 'Zilla Slab';
+  /* font-family: 'Zilla Slab'; */
+  font-family: 'Bravura';
   font-size: .9em;
 }
 
-.accidental {
-  /* margin-left: -.5px;
-  font-family: 'Zilla Slab';
-  font-size: .8em; */
-
-  margin-left: 1px;
+.seventhText {
+  width: min-content;
+  margin-left: 2px;
+  line-height: 22px;
+  
   font-family: 'Bravura';
+  font-size: .6em;
 }
 
 .unknown { background-color: hsl(0,   0%,  50%) }
@@ -69,7 +71,6 @@
 .maj     { background-color: hsl(40,  5%,  82%) }
 .aug     { background-color: hsl(15,  70%, 64%) }
 
-/* 
 .dim7    { background-color: hsl(195, 70%, 44%) }
 .hdim7   { background-color: hsl(195, 70%, 44%) }
 .min7    { background-color: hsl(195, 70%, 72%) }
@@ -77,8 +78,7 @@
 .dom7    { background-color: hsl(40,  5%,  82%) }
 .maj7    { background-color: hsl(40,  5%,  82%) }
 .aug7    { background-color: hsl(15,  70%, 64%) }
-.augmaj7 { background-color: hsl(15,  70%, 64%) } 
-*/
+.augmaj7 { background-color: hsl(15,  70%, 64%) }
 
 /* 
 .dim7    { background-color: hsl(0, 100%, 100%) }
@@ -91,15 +91,7 @@
 .augmaj7 { background-color: hsl(0, 100%, 100%) } 
 */
 
-/* .dim7    { background-color: hsl(0,   60%, 70%) }
-.hdim7   { background-color: hsl(45,  60%, 70%) }
-.min7    { background-color: hsl(90,  60%, 70%) }
-.minmaj7 { background-color: hsl(135, 60%, 70%) }
-.dom7    { background-color: hsl(180, 60%, 70%) }
-.maj7    { background-color: hsl(225, 60%, 70%) }
-.aug7    { background-color: hsl(270, 60%, 70%) }
-.augmaj7 { background-color: hsl(315, 60%, 70%) } */
-
+/* 
 .maj7    { background-color: hsl(0,   60%, 70%) }
 .aug7    { background-color: hsl(45,  60%, 70%) }
 .augmaj7 { background-color: hsl(90,  60%, 70%) }
@@ -107,7 +99,8 @@
 .hdim7   { background-color: hsl(180, 60%, 70%) }
 .min7    { background-color: hsl(225, 60%, 70%) }
 .minmaj7 { background-color: hsl(270, 60%, 70%) }
-.dom7    { background-color: hsl(315, 60%, 70%) }
+.dom7    { background-color: hsl(315, 60%, 70%) } 
+*/
 
 .empty { 
   width: 21.5px; height: 31px;

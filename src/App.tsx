@@ -8,8 +8,9 @@ import { Chart } from './Chart';
 function App() {
   return (
     <div id='wrapper'>
-      <div id='backdropA' />
-      <div id='backdropB' />
+      <div id='backdropFull' />
+      {/* <div id='backdropA' />
+      <div id='backdropB' /> */}
       <div>
         <ModeContext>
           <Bar /> 
