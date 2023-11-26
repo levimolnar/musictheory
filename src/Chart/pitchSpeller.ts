@@ -103,21 +103,30 @@ export const pitchSpeller = (scales: {[key: string]: number[]}, transpose: numbe
         if (!j) {
           resultArray.push({"id": uuidv4(), "char": noteMatrix[sx][sy]['char'], "type": chordTypes[j].type, "num": chordTypes[j].num})
           accidentalCount += accTransform(sy)
+
+          // console.log(sy, noteMatrix[sx][sy].char);
+
           continue
         }
         
         const x = (j+sx)%scaleLength
         const matrixY = noteMatrix[x].map(obj => obj.number)
         const transposedNote = (scales[scaleName][j] + Number(transpose)) % 12
+        // console.log(transposedNote);
         const indexY = matrixY.indexOf(transposedNote)
 
         if (indexY === -1) {
           accidentalCount = 999
           break
         } 
+
+        // console.log(indexY, noteMatrix[x][indexY].char);
+
         resultArray.push({"id": uuidv4(), "char": noteMatrix[x][indexY].char, "type": chordTypes[j].type, "num": chordTypes[j].num})
         accidentalCount += accTransform(indexY)
       }
+      
+      // console.log('^^-------------^^');
 
       if (accidentalCount < lowestCount) {
         lowestCount = accidentalCount

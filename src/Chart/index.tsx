@@ -11,6 +11,7 @@ import ChordTree from './chordTree';
 
 import { NoteCard } from '../NoteCard';
 import { defScaleObj } from './defScaleObj';
+import { ModeList } from './pitchSpellerOOP';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
@@ -81,10 +82,18 @@ export const Chart = () => {
   const [transpose, setTranspose] = useState<number>(0);
   const [modeSet, setModeSet] = useState<string>(Object.keys(defScaleObj)[0]);
   const [seventhEnabled, setSeventhEnabled] = useState<boolean>(false);
-  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>} | undefined>(undefined);
+
+  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>} | undefined>(undefined);  
+  const [modeData, setModeData] = useState<any>(undefined);
 
   useEffect(() => {
+
     setScales(pitchSpeller(defScaleObj[modeSet], transpose))
+    
+    // const modes = new ModeList(defScaleObj[modeSet], transpose);
+    setModeData(new ModeList(defScaleObj[modeSet], transpose));
+    console.log(modeData);
+
   }, [modeSet, transpose]);
 
   const [uniqueChartId] = useState(uuidv4());
@@ -103,10 +112,6 @@ export const Chart = () => {
           <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '10px', paddingLeft: '5px', margin: '5px', outline: 'none', border: 'none'}} value={modeSet} onChange={(e: any) => setModeSet(e.target.value)}>
             { Object.keys(defScaleObj).map(ms => <option key={'option-' + ms} value={ms}>{ms}</option>) }
           </select>
-          {/* <div style={{margin: '0 10px 0 auto'}}>
-            <input style={{verticalAlign: 'middle'}} type="checkbox" onChange={() => setSeventhEnabled((prev) => !prev)}/>
-            <label style={{lineHeight: '30px', fontSize:'.8em', fontWeight: 'bold'}}>7th</label>
-          </div> */}
           <div 
             className='seventhButton'
             onClick={() => setSeventhEnabled((prev) => !prev)} 
