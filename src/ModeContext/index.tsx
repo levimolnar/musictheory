@@ -95,9 +95,9 @@ export const ModeContext = ({children}: {children: any}) => {
 
     if (payloadStorage.origin === 'chart') {
       // reset id of dragged chart item on in any case
-      payloadStorage.setFunc((prevScales: any) => {
-        const newScales = {...prevScales};
-        newScales[payloadStorage.chordDir.scale][payloadStorage.chordDir.index].id = uuidv4();
+      payloadStorage.setFunc((prevScales: Array<{id: string, root: string, type: {full: string, short: string, symbol: string}, num: string}>) => {
+        const newScales = [...prevScales];
+        newScales[payloadStorage.index].id = uuidv4();
         return newScales;
       });
     }

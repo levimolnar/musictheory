@@ -3,13 +3,13 @@ import './NoteCard.css';
 export const NoteCard = ({chord, seventh=false}: {
   chord: {
     id: string, 
-    char: string, 
+    root: string, 
     type: {
       full: string, 
       short: string, 
-      symbol: string
+      symbol: string,
     }, 
-    num: string
+    num: string 
   }, 
   seventh?: boolean
 }) => {
@@ -27,12 +27,17 @@ export const NoteCard = ({chord, seventh=false}: {
     ? {paddingLeft: '3px'} 
     : {width: '100%'};
 
+  const {root, type, num} = chord;
+
+  // console.log(chord);
+
   return (
-    <div className={'cardContent ' + chord.type.short} style={contentStyle}>
-      <div className='cardNumber' style={numberStyle}>{chord.num}</div>
+    <div className={'cardContent ' + type.short} style={contentStyle}>
+      <div className='cardNumber' style={numberStyle}>{num}</div>
       <div className='textContainer' style={containerStyle}>
-        <div className='rootText' style={rootStyle}>{chord.char[0]}{chord.char.slice(1,)}</div>
-        {seventh ? <div className='seventhText'>{chord.type.symbol}</div> : <></>}
+        {/* <div className='rootText' style={rootStyle}>{root[0]}{root.slice(1,)}</div> */}
+        <div className='rootText' style={rootStyle}>{root}</div>
+        {seventh ? <div className='seventhText'>{type.symbol}</div> : <></>}
       </div>
     </div>
   )

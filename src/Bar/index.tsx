@@ -9,7 +9,7 @@ import { NoteCard } from '../NoteCard';
 import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 
-const SortableItem = ({index, chord, setFunc, seventh}: {index: number, chord: any, setFunc: any, seventh: boolean}) => {
+const SortableItem = ({chord, setFunc, index, seventh}: {chord: any, setFunc: any, index: number, seventh: boolean}) => {
   const {
     attributes,
     listeners,
@@ -19,11 +19,7 @@ const SortableItem = ({index, chord, setFunc, seventh}: {index: number, chord: a
     isDragging,
   } = useSortable({
     id: chord.id, 
-    // transition: {
-    //   duration: 300,
-    //   easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    // },
-    data: {payload: {index, chord, setFunc, origin: 'progBar', seventh}}
+    data: {payload: {chord, setFunc, index, origin: 'progBar', seventh}},
   })
 
   const style = {
@@ -63,10 +59,10 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const Bar = () => {
 
-  const [items, setItems] = useState<Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string, seventh: boolean}>>([
-    {id: uuidv4(), char: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: false},
-    {id: uuidv4(), char: 'G', type: {full: "Major", short: "maj", symbol: ""}, num: 'V', seventh: false},
-    {id: uuidv4(), char: 'C', type: {full: "Major", short: "maj", symbol: ""}, num: 'I', seventh: false},
+  const [items, setItems] = useState<Array<{id: string, root: string, type: {full: string, short: string, symbol: string}, num: string, seventh: boolean}>>([
+    {id: uuidv4(), root: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: false},
+    {id: uuidv4(), root: 'G', type: {full: "Major", short: "maj", symbol:  ""}, num: 'V',  seventh: false},
+    {id: uuidv4(), root: 'C', type: {full: "Major", short: "maj", symbol:  ""}, num: 'I',  seventh: false},
   ]);
 
   const [uniqueBarId] = useState(uuidv4());
@@ -94,14 +90,13 @@ export const Bar = () => {
     <StrictMode>
       <SortableContext
         items={items.map((i: any) => i.id)}
-        // items={[...items].map((i: any) => i.id)}
         strategy={horizontalListSortingStrategy} 
         id={'sortable-' + uniqueBarId}
       >
         <div className='bar barBlur' style={widthStyle}>
           {
             items.length
-              ? items.map((chord: any, i: any) => <SortableItem key={chord.id} index={i} chord={chord} setFunc={setItems} seventh={chord.seventh}/>)
+              ? items.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={setItems} index={i} seventh={chord.seventh}/>)
               : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
           }
         </div>

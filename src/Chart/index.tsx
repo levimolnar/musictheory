@@ -6,12 +6,9 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable } from '@dnd-kit/core';
 import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 
-import { pitchSpeller } from './pitchSpeller';
-import ChordTree from './chordTree';
-
 import { NoteCard } from '../NoteCard';
-import { defScaleObj } from './defScaleObj';
-import { ModeList } from './pitchSpellerOOP';
+import { getIntervalStrings, getSpellingPath } from './modeFunctions';
+import { characterMatrix, chordIntervals, defModeRecipes } from './modeData';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
@@ -36,7 +33,7 @@ const ScaleHeader = ({text}: {text: string}) => {
   )
 }
 
-export const ChordDraggable = ({chordDir, chord, setFunc, children}: {chordDir: {scale: string, index: number}, chord: any, setFunc: any, children: any}) => {
+export const ChordDraggable = ({chord, setFunc, index, children}: {chord: any, setFunc: any, index: number, children: any}) => {
 
   const context = useContext(ChartContext);
 
@@ -45,7 +42,10 @@ export const ChordDraggable = ({chordDir, chord, setFunc, children}: {chordDir: 
     listeners,
     setNodeRef,
     isDragging,
-  } = useDraggable({id: chord.id, data: {payload: {chordDir, chord, setFunc, origin: 'chart', seventh: context}}})
+  } = useDraggable({
+    id: chord.id, 
+    data: {payload: {chord, setFunc, index, origin: 'chart', seventh: context}},
+  })
 
   const dragStyle = { opacity: isDragging ? '0' : '1' }
 
@@ -56,15 +56,35 @@ export const ChordDraggable = ({chordDir, chord, setFunc, children}: {chordDir: 
   )
 }
 
-const ScaleRow = ({scaleName, array, setFunc}: {scaleName: string, array: Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>, setFunc: any}) => {
+const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) => {
+
+  const [chords, setChords] = useState<Array<{id: string, root: string, type: {full: string, short: string, symbol: string}, num: string}> | undefined>(undefined);
+
+  useEffect(() => {
+    const spellingPath = getSpellingPath(recipe);
+    const intervalStrings = getIntervalStrings(recipe, 4);
+
+    const chordsArray = recipe.map((_, i) => {
+      const id = uuidv4();
+      const [rootX, rootY] = spellingPath[i];
+      const root = characterMatrix[rootX][rootY];
+      const type = chordIntervals[+intervalStrings[i]];
+      const num = "x";
+
+      return {id, root, type, num};
+    });
+    
+    setChords(chordsArray);
+  }, [scaleName, recipe]);
+
   const context = useContext(ChartContext);
+  
   return (
     <div className='contentRow'>
       { 
-        array ? array.map((chord, i) => { 
-          const chordDir = {scale: scaleName, index: i};
+        chords ? chords.map((chord, i) => { 
           return (
-            <ChordDraggable key={chord.id} chordDir={chordDir} chord={chord} setFunc={setFunc}>
+            <ChordDraggable key={chord.id} chord={chord} setFunc={setChords} index={i}>
               <NoteCard chord={chord} seventh={context}/>
             </ChordDraggable>
           )
@@ -80,21 +100,26 @@ const ChartContext = createContext<boolean | undefined>(undefined);
 export const Chart = () => {
 
   const [transpose, setTranspose] = useState<number>(0);
-  const [modeSet, setModeSet] = useState<string>(Object.keys(defScaleObj)[0]);
+  const [modeTab, setModeTab] = useState<string>(Object.keys(defModeRecipes)[0]);
   const [seventhEnabled, setSeventhEnabled] = useState<boolean>(false);
+  const [modes, setModes] = useState<{[key: string]: number[]} | undefined>(undefined);  // Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>} 
 
-  const [scales, setScales] = useState<{[key: string]: Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>} | undefined>(undefined);  
-  const [modeData, setModeData] = useState<any>(undefined);
+  const transposeObj = (modeObj: {[modeName: string]: number[]}, transpose: number) => {
+    let transposedScaleObj: any = {};
+
+    Object.entries(modeObj).forEach(([modeName, recipe]) => {
+      const transposedRecipe = Array.from(recipe, (i) => (i + transpose) % 12);
+      transposedScaleObj[modeName] = transposedRecipe;
+    });
+
+    return transposedScaleObj;
+  }
 
   useEffect(() => {
-
-    setScales(pitchSpeller(defScaleObj[modeSet], transpose))
-    
-    // const modes = new ModeList(defScaleObj[modeSet], transpose);
-    setModeData(new ModeList(defScaleObj[modeSet], transpose));
-    console.log(modeData);
-
-  }, [modeSet, transpose]);
+    const modeObj = defModeRecipes[modeTab];
+    const transposedModeObj = transposeObj(modeObj, transpose);
+    setModes(transposedModeObj);
+  }, [modeTab, transpose]);
 
   const [uniqueChartId] = useState(uuidv4());
 
@@ -109,8 +134,8 @@ export const Chart = () => {
               <div className='transposeButton' onClick={() => setTranspose((t) => mod((t-1), 12))}>▾</div>
             </div>
           </div>
-          <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '10px', paddingLeft: '5px', margin: '5px', outline: 'none', border: 'none'}} value={modeSet} onChange={(e: any) => setModeSet(e.target.value)}>
-            { Object.keys(defScaleObj).map(ms => <option key={'option-' + ms} value={ms}>{ms}</option>) }
+          <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '10px', paddingLeft: '5px', margin: '5px', outline: 'none', border: 'none'}} value={modeTab} onChange={(e: any) => setModeTab(e.target.value)}>
+            { Object.keys(defModeRecipes).map(ms => <option key={'option-' + ms} value={ms}>{ms}</option>) }
           </select>
           <div 
             className='seventhButton'
@@ -122,13 +147,13 @@ export const Chart = () => {
         </div>
         <div className='chart blur'>
           { 
-            scales ? (
+            modes ? (
               <>
                 <div className='chartHeaders'>
-                  { Object.keys(scales).map((scaleName: string) => <ScaleHeader key={'header-' + scaleName + uniqueChartId} text={scaleName} />) }
+                  { Object.keys(modes).map((modeName: string) => <ScaleHeader key={'header-' + modeName + uniqueChartId} text={modeName}/>) }
                 </div>
                 <div className='chartContent'>
-                  { Object.keys(scales).map((scaleName: string) => <ScaleRow key={'content-' + scaleName + uniqueChartId} scaleName={scaleName} array={scales[scaleName]} setFunc={setScales} />) }
+                  { Object.keys(modes).map((modeName: string) => <ScaleRow key={'content-' + modeName + uniqueChartId} scaleName={modeName} recipe={modes[modeName]}/>) }
                 </div>
               </>
             ) : <div style={{width: 'min-content', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
