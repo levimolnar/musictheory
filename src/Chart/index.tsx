@@ -7,7 +7,7 @@ import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable }
 import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 
 import { NoteCard } from '../NoteCard';
-import { getIntervalStrings, getSpellingPath } from './modeFunctions';
+import { getIntervalStrings, getSpellingPath, getNumerals } from './modeFunctions';
 import { characterMatrix, chordIntervals, defModeRecipes } from './modeData';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
@@ -35,7 +35,7 @@ const ScaleHeader = ({text}: {text: string}) => {
 
 export const ChordDraggable = ({chord, setFunc, index, children}: {chord: any, setFunc: any, index: number, children: any}) => {
 
-  const context = useContext(ChartContext);
+  const {seventh} = useContext(ChartContext);
 
   const {
     attributes,
@@ -44,7 +44,7 @@ export const ChordDraggable = ({chord, setFunc, index, children}: {chord: any, s
     isDragging,
   } = useDraggable({
     id: chord.id, 
-    data: {payload: {chord, setFunc, index, origin: 'chart', seventh: context}},
+    data: {payload: {chord, setFunc, index, origin: 'chart', seventh: seventh}},
   })
 
   const dragStyle = { opacity: isDragging ? '0' : '1' }
@@ -58,26 +58,27 @@ export const ChordDraggable = ({chord, setFunc, index, children}: {chord: any, s
 
 const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) => {
 
+  const {seventh, numeralReference} = useContext(ChartContext);
+
   const [chords, setChords] = useState<Array<{id: string, root: string, type: {full: string, short: string, symbol: string}, num: string}> | undefined>(undefined);
 
   useEffect(() => {
     const spellingPath = getSpellingPath(recipe);
     const intervalStrings = getIntervalStrings(recipe, 4);
+    const numerals = getNumerals(recipe, numeralReference);
 
     const chordsArray = recipe.map((_, i) => {
       const id = uuidv4();
       const [rootX, rootY] = spellingPath[i];
       const root = characterMatrix[rootX][rootY];
       const type = chordIntervals[+intervalStrings[i]];
-      const num = "x";
+      const num = String(numerals[i]);
 
       return {id, root, type, num};
     });
     
     setChords(chordsArray);
   }, [scaleName, recipe]);
-
-  const context = useContext(ChartContext);
   
   return (
     <div className='contentRow'>
@@ -85,7 +86,7 @@ const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) =>
         chords ? chords.map((chord, i) => { 
           return (
             <ChordDraggable key={chord.id} chord={chord} setFunc={setChords} index={i}>
-              <NoteCard chord={chord} seventh={context}/>
+              <NoteCard chord={chord} seventh={seventh}/>
             </ChordDraggable>
           )
         })
@@ -95,20 +96,22 @@ const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) =>
   )
 }
 
-const ChartContext = createContext<boolean | undefined>(undefined);
+const ChartContext = createContext<{seventh: boolean, numeralReference: number[]}>({seventh: false, numeralReference: []});
 
 export const Chart = () => {
 
   const [transpose, setTranspose] = useState<number>(0);
   const [modeTab, setModeTab] = useState<string>(Object.keys(defModeRecipes)[0]);
-  const [seventhEnabled, setSeventhEnabled] = useState<boolean>(false);
-  const [modes, setModes] = useState<{[key: string]: number[]} | undefined>(undefined);  // Array<{id: string, char: string, type: {full: string, short: string, symbol: string}, num: string}>} 
+  const [modes, setModes] = useState<{[key: string]: number[]} | undefined>(undefined);
 
+  const [seventhEnabled, setSeventhEnabled] = useState<boolean>(false);
+
+  const transposeRecipe = (recipe: number[], transpose: number) => Array.from(recipe, (i) => (i + transpose) % 12);
   const transposeObj = (modeObj: {[modeName: string]: number[]}, transpose: number) => {
     let transposedScaleObj: any = {};
 
     Object.entries(modeObj).forEach(([modeName, recipe]) => {
-      const transposedRecipe = Array.from(recipe, (i) => (i + transpose) % 12);
+      const transposedRecipe = transposeRecipe(recipe, transpose);
       transposedScaleObj[modeName] = transposedRecipe;
     });
 
@@ -124,7 +127,9 @@ export const Chart = () => {
   const [uniqueChartId] = useState(uuidv4());
 
   return (
-    <ChartContext.Provider value={seventhEnabled}>
+    <ChartContext.Provider value={{seventh: seventhEnabled, numeralReference: transposeRecipe([0,2,4,5,7,9,11], transpose)}}>
+    {/* <ChartContext.Provider value={{seventh: seventhEnabled, numeralReference: transposeRecipe([0,2,3,5,7,8,10], transpose)}}>
+    <ChartContext.Provider value={{seventh: seventhEnabled, numeralReference: transposeRecipe([0,1,3,4,6,8,9], transpose)}}> */}
       <div style={{width: 'min-content'}}>
         <div className='settingsBar blur'>
           <div style={{margin: '2px 0 2px 0', display: 'flex', borderRight: '2px solid #00000055'}}>
