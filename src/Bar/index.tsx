@@ -82,6 +82,7 @@ export const Bar = () => {
   // apply transition effect only in case of width decrease
   const widthStyle = {
     // width: `${barWidth}px`,
+    // width: 'min-content',
     width: 'min-content',
     transition: decreaseBool ? 'width 100ms ease-out' : 'none',
   };
@@ -93,12 +94,15 @@ export const Bar = () => {
         strategy={horizontalListSortingStrategy} 
         id={'sortable-' + uniqueBarId}
       >
-        <div className='bar barBlur' style={widthStyle}>
-          {
-            items.length
-              ? items.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={setItems} index={i} seventh={chord.seventh}/>)
-              : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
-          }
+        <div className='componentWrapper' style={{marginBottom: '15px'}}>
+          <div className='backdrop blur'/>
+          <div className='bar' style={widthStyle}>
+            {
+              items.length
+                ? items.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={setItems} index={i} seventh={chord.seventh}/>)
+                : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
+            }
+          </div>
         </div>
       </SortableContext>
     </StrictMode>

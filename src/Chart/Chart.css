@@ -3,36 +3,59 @@
   src: 
     url('../fonts/BravuraText.woff') format('woff'),
     url('../fonts/BravuraText.woff2') format('woff2');
-  /* font-weight: normal;
-  font-style: normal; */
 }
 
 :root {
-  --defShadow: -4px 4px 6px #00000055;
+  --defShadow: -3px 3px 3px #0000002b;
+}
+
+.componentWrapper {
+  position: relative;
+  width: min-content; height: min-content;
+}
+
+.componentWrapperFill {
+  position: relative;
+  width: 100%; height: min-content;
+}
+
+.backdrop {
+  position: absolute;
+  width: 100%; height: 100%;
+  z-index: 0;
+
+  border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  box-shadow: var(--defShadow);
 }
 
 .blur {
   backdrop-filter:
-    invert()
+    invert(1)
     hue-rotate(180deg)
     blur(10px)
-    contrast(50%)
-    brightness(82%);
+    contrast(40%)
+    brightness(100%);
+    
+  /* mix-blend-mode: multiply; */
+  /* background-color: #5d5dc555; */
   background-image: url(noise.png);
 }
 
 .settingsBar {
   width: auto; height: 30px;
-  margin-bottom: 5px;
+  z-index: 1;
 
-  border-radius: 8px;
-  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
-  background-color: #ffffff22;
+  border-top: 1px solid transparent; border-right: 1px solid transparent;
 
   display: flex;
   flex-direction: row;
 
-  box-shadow: var(--defShadow);
+  /* margin-bottom: 5px; */
+}
+
+.settingsBar * {
+  z-index: 1;
 }
 
 .transposeButton {
@@ -65,20 +88,26 @@
 }
 
 .seventhButton:hover {
-  filter: invert();
+  filter: invert(1);
 }
 
 .chart {
   width: max-content;
+  z-index: 1;
+
+  border-top: 1px solid transparent; border-right: 1px solid transparent;
   
-  border-radius: 8px;
+  /* border-radius: 8px;
   border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
   background-color: #ffffff22;
+  box-shadow: var(--defShadow); */
 
   display: flex;
   flex-direction: row;
+}
 
-  box-shadow: var(--defShadow);
+.chart * {
+  z-index: 1;
 }
 
 .chartHeaders {
@@ -89,6 +118,19 @@
   overflow: hidden;
 
   box-shadow: inset -2px 0 2px #00000022;
+}
+
+.referenceButton {
+  width: 20px; height: 20px;
+  /* position: relative;
+  z-index: 2; */
+  /* background: radial-gradient(#0000002b 25%, #ffffff33 25% 40%, #0000002b 40%, transparent 75%); */
+  background: radial-gradient(#0000002b 25%, #ffffff44 25% 40%, #0000002b 40%, transparent 66.6%);
+}
+
+.referenceButton:hover {
+  /* background: radial-gradient(#ffffff33 25%, #0000002b 33.3%, transparent 75%);  */
+  background: radial-gradient(#ffffff44 25%, #0000002b 33.3%, transparent 66.6%); 
 }
 
 .chartContent {
