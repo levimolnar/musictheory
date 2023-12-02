@@ -1,0 +1,68 @@
+:root {
+  --defShadow: -3px 3px 3px #0000002b;
+}
+
+.bar {
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bar *{
+  z-index: 1;
+}
+
+.line {
+  /* width: fit-content; height: 52px; */
+  height: 52px;
+  /* transition: width 150ms ease-in-out; */
+  
+  padding: 0 10px 0 10px;
+  z-index: 1;
+
+  border-top: 1px solid transparent; border-right: 1px solid transparent;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  
+  /* border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  background-color: #ffffff22;
+  box-shadow: var(--defShadow); */
+
+  /* margin-bottom: 15px; */
+}
+
+.line * {
+  z-index: 1;
+}
+
+.removeLineButton {
+  position: absolute;
+  right: -30px;
+
+  width: 20px; height: 20px; line-height: 17px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 1.2em;
+  margin: 15px 0 0 6px;
+  background-color: #00000033;
+  color: #ffffffdd;
+
+  cursor: pointer;
+}
+
+.newLineButton {
+  position: absolute;
+  bottom: -30px;
+
+  width: 20px; height: 20px; line-height: 17px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 1.2em;
+  background-color: #00000033;
+  color: #ffffffdd;
+
+  cursor: pointer;
+}

@@ -110,18 +110,9 @@ const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) =>
 
   useEffect(() => {
     const spellingPath = getSpellingPath(recipe);
-
-    // let spellingPath: Array<[number, number]>;
-
-    // try {
-    //   spellingPath = getSpellingPath(recipe);
-    //   console.log(spellingPath);
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
     const intervalStrings = getIntervalStrings(recipe, 4);
     const numerals = getNumerals(recipe, ref!.numRef);
+    
 
     const chordsArray = recipe.map((_, i) => {
       const id = uuidv4();
@@ -134,7 +125,7 @@ const ScaleRow = ({scaleName, recipe}: {scaleName: string, recipe: number[]}) =>
     });
     
     setChords(chordsArray);
-  }, [scaleName, recipe, ref!.numRef]);
+  }, [scaleName, recipe, ref]);
   
   return (
     <div className='contentRow'>
@@ -197,14 +188,12 @@ export const Chart = () => {
             { 
               modes ? (
                 <>
-                  <div style={{position: 'absolute', left: '-35px'}}>
-
+                  <div style={{position: 'absolute', left: '-30px'}}>
                     <div style={{position: 'absolute', zIndex: '2', width: '30px', height: '100%', pointerEvents: 'none'}}>
-                      <div style={{position: 'absolute', width: '20px', height: '20px', top: `${refCoord[1]*50 + 15}px`, background: (modeTab === refCoord[0]) ? 'radial-gradient(#ff5d00 33.3%, transparent 50%)' : 'none', transition: 'top 250ms ease-in-out'}}></div> 
-                    </div>
-                    
+                      <div style={{position: 'absolute', width: '18px', height: '18px', top: `${refCoord[1]*50 + 16}px`, background: (modeTab === refCoord[0]) ? 'radial-gradient(#ff0055 33.3%, transparent 50%)' : 'none', transition: (modeTab === refCoord[0]) ? 'top 250ms ease-in-out' : 'none'}}></div> 
+                    </div>                    
                     { Object.keys(modes).map((modeName: string, i) =>
-                      <div style={{width: '30px', height: '50px', display: 'flex', alignItems: 'center'}}>
+                      <div style={{width: '25px', height: '50px', display: 'flex', alignItems: 'center'}}>
                         <div 
                           className='referenceButton'
                           onClick={() => {

@@ -2,9 +2,10 @@
   position: absolute;
 
   width: 100vw; height: 100vh;
-  display: flex;
 
+  display: flex;
   justify-content: space-evenly;
+  /* justify-content: center; */
   align-items: center;
 }
 
@@ -14,9 +15,10 @@
   z-index: -1;
 
   /* background: url(./Chart/noise.png) #4e67cd; */
-  background: url(./Chart/noise.png) #333;
+  background: url(./Chart/noise.png) #7F7F7F;
+  /* background: url(./Chart/noise.png) #333; */
   /* background: url(bg.jpeg) center/200%; */
-  filter: saturate(90%);
+  /* filter: saturate(90%); */
 }
 
 #backdropA {
@@ -25,7 +27,7 @@
   left: 0;
   z-index: -1;
 
-  background: url(./Chart/noise.png) #222;
+  background: url(./Chart/noise.png) #333;
   /* background: url(./Chart/noise.png) #e56f5a; */
 }
 

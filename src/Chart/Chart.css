@@ -121,16 +121,12 @@
 }
 
 .referenceButton {
-  width: 20px; height: 20px;
-  /* position: relative;
-  z-index: 2; */
-  /* background: radial-gradient(#0000002b 25%, #ffffff33 25% 40%, #0000002b 40%, transparent 75%); */
+  width: 18px; height: 18px;
   background: radial-gradient(#0000002b 25%, #ffffff44 25% 40%, #0000002b 40%, transparent 66.6%);
 }
 
 .referenceButton:hover {
-  /* background: radial-gradient(#ffffff33 25%, #0000002b 33.3%, transparent 75%);  */
-  background: radial-gradient(#ffffff44 25%, #0000002b 33.3%, transparent 66.6%); 
+  background: radial-gradient(#ffffff44 25%, #0000002b 33.3%, transparent 66.6%);
 }
 
 .chartContent {

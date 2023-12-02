@@ -27,13 +27,13 @@ export const ModeContext = ({children}: {children: any}) => {
     setBlocked(false);
     setThrottled(false);
     setDragId(active.id); 
-    if (active.data.current.payload) setPayloadStorage(active.data.current.payload);
+    if (active.data.current.payload) { setPayloadStorage(active.data.current.payload) };
   }
 
   const handleDragOver = ({active, over}: any) => {
 
-    if (!payloadStorage) return;
-    console.log(payloadStorage);
+    if (!payloadStorage) { return };
+    // console.log(payloadStorage);
 
     if (!over || !over.data.current) {
       // if object hovered over is not drop zone
@@ -42,8 +42,13 @@ export const ModeContext = ({children}: {children: any}) => {
         // if from sortable, remove card at index from sortable
         // console.log('remove from sortable');
 
+        const {remove: itemRemove} = active.data.current.payload.setFunc;
+        const activeContainerId = active.data.current.sortable.containerId;
+
         // remove based on ID, can't remove wrong index.
-        active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+        // active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+
+        itemRemove(activeContainerId, active.data.current.payload.chord.id);
 
         setBlocked(false);
         throttle();
@@ -56,7 +61,11 @@ export const ModeContext = ({children}: {children: any}) => {
     if (active.data.current.hasOwnProperty("sortable") && active.data.current.sortable.containerId !== over.data.current.sortable.containerId) {
       // in case sortables are next to eachother and draggable does not meet !over, still remove item.
 
-      active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+      const {remove: itemRemove} = active.data.current.payload.setFunc;
+      const activeContainerId = active.data.current.sortable.containerId;      
+
+      // active.data.current.payload.setFunc((items: any) => items.filter((chord: any) => chord.id !== active.data.current.payload.chord.id));
+      itemRemove(activeContainerId, active.data.current.payload.chord.id);
 
       setBlocked(false);
       throttle();
@@ -66,15 +75,17 @@ export const ModeContext = ({children}: {children: any}) => {
     if (payloadStorage.chord && !throttled) {
 
       const {index: newIndex, items } = over.data.current.sortable;
-      const setItemsFunc = over.data.current.payload.setFunc;
+      // const setItemsFunc = over.data.current.payload.setFunc;
+      const {add: itemAdd, swap: itemSwap} = over.data.current.payload.setFunc;
+      const containerId = over.data.current.sortable.containerId;
 
       const duplicateIndex = items.findIndex((id: any) => id === dragId);
       
       if (duplicateIndex === -1 && !blocked) {
         // console.log('add to sortable');
 
-        // setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, id: dragId}, ...items.slice(newIndex)]);
-        setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, seventh: payloadStorage.seventh, id: dragId}, ...items.slice(newIndex)]);
+        // setItemsFunc((items: any) => [...items.slice(0, newIndex), {...payloadStorage.chord, seventh: payloadStorage.seventh, id: dragId}, ...items.slice(newIndex)]);
+        itemAdd(containerId, newIndex, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: dragId});
 
         setBlocked(true);
         throttle();
@@ -83,7 +94,8 @@ export const ModeContext = ({children}: {children: any}) => {
       } else {
         // console.log('swap cards');
         
-        setItemsFunc((items: any) => arrayMove(items, duplicateIndex, newIndex));
+        // setItemsFunc((items: any) => arrayMove(items, duplicateIndex, newIndex));
+        itemSwap(containerId, duplicateIndex, newIndex);
 
         throttle();
         return;
@@ -112,8 +124,12 @@ export const ModeContext = ({children}: {children: any}) => {
       const oldIndex = active.data.current.sortable.index;  // !
       const newIndex = over.data.current.sortable.index;
 
-      over.data.current.payload.setFunc((items: any) => arrayMove(items, oldIndex, newIndex));
-      // over.data.current.payload.setFunc((items: any) => new Set(arrayMove([...items], oldIndex, newIndex)));
+      const {swap: itemSwap} = over.data.current.payload.setFunc;
+      const containerId = over.data.current.sortable.containerId;
+
+      // over.data.current.payload.setFunc((items: any) => arrayMove(items, oldIndex, newIndex));
+      // over.data.current.payload.setFunc.swap(0, oldIndex, newIndex);
+      itemSwap(containerId, oldIndex, newIndex);
       return
     }
 

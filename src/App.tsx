@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { ModeContext } from './ModeContext';
-import { Bar } from './Bar';
+import { ProgBar } from './ProgBar';
 import { Chart } from './Chart';
 
 function App() {
@@ -11,19 +11,23 @@ function App() {
       <div id='backdropFull' />
       {/* <div id='backdropA' />
       <div id='backdropB' /> */}
-      <div>
+      {/* <div>
         <ModeContext>
-          <Bar /> 
+          <Bar />
+          <div style={{height: '6px'}}/>
           <Chart />
         </ModeContext>
-      </div>
+      </div> */}
+      {/* <div style={{width: '50px'}}/> */}
       <div>
         <ModeContext>
-          <div style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Bar /> 
-            <Bar />
+          <div style={{display: 'flex'}}>
+            <Chart />
+            <div style={{width: '25px'}}/>
+            <div style={{height: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'start'}}>
+              <ProgBar />
+            </div>
           </div>
-          <Chart />
         </ModeContext>
       </div>
     </div>

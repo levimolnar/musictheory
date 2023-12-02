@@ -15,7 +15,7 @@ export const NoteCard = ({chord, seventh=false}: {
 }) => {
 
   const contentStyle: any = seventh 
-    ? {width: '50px'}
+    ? {width: '57px'}
     : {width: '25px'};
   const containerStyle: any = seventh 
     ? {display: 'flex', background: 'linear-gradient(45deg, #ffffff88, transparent 50% 66%, #00000022)'} 
