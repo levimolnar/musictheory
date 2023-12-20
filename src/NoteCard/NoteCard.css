@@ -64,7 +64,7 @@
   font-size: .6em;
 }
 
-.unknown { background-color: hsl(0,   0%,  50%) }
+.unknown { background-color: hsl(0, 0%, 40%) }
 .dim     { background-color: hsl(195, 70%, 44%) }
 .min     { background-color: hsl(195, 70%, 72%) }
 .maj     { background-color: hsl(40,  5%,  82%) }

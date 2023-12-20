@@ -8,10 +8,7 @@ import './Bar.css';
 import { NoteCard } from '../NoteCard';
 import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
-
-type Chord = {id: string, root: string, type: {full: string, short: string, symbol: string}, num: string, seventh: boolean};
-type Progression = Chord[];
-type Line = {lineId: string, progression: Progression};
+import { Chord, Progression, Line } from '../types';
 
 const SortableItem = ({chord, setFunc, index, seventh}: {chord: Chord, setFunc: any, index: number, seventh: boolean}) => {
   const {
@@ -63,34 +60,6 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFuncs: any, lineId: string}) => {
 
-  // const [items, setItems] = useState<Progression>([]);
-
-  // useEffect(() => {
-  //   setItems([
-  //     {id: uuidv4(), root: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: false},
-  //     {id: uuidv4(), root: 'G', type: {full: "Major", short: "maj", symbol:  ""}, num: 'V',  seventh: false},
-  //     {id: uuidv4(), root: 'C', type: {full: "Major", short: "maj", symbol:  ""}, num: 'I',  seventh: false},
-  //   ])
-  // }, [])
-
-  // const [uniqueBarId] = useState(uuidv4());
-
-  // return (
-  //   <SortableContext
-  //     items={items.map((i: any) => i.id)}
-  //     strategy={horizontalListSortingStrategy} 
-  //     id={'sortable-' + uniqueBarId}
-  //   >
-  //     <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
-  //       {
-  //         items.length
-  //           ? items.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={setItems} index={i} seventh={chord.seventh}/>) 
-  //           : <EmptyItem id={'empty-' + uniqueBarId} setFunc={setItems}/>
-  //       }
-  //     </div>
-  //   </SortableContext>
-  // )
-
   return (
     <SortableContext
       items={prog.map((i: any) => i.id)}
@@ -107,21 +76,33 @@ export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFu
       </div>
     </SortableContext>
   )
-
-  // React.Dispatch<React.SetStateAction<string>>
 }
 
 export const ProgBar = () => {
-
-  // const [lineArray, setLineArray] = useState<string[]>([uuidv4()]);
   
   const defLineObj: Line = {
     lineId: uuidv4(), 
+    // progression: [
+    //   {id: uuidv4(), root: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: true},
+    //   {id: uuidv4(), root: 'G', type: {full: "Major", short: "maj", symbol: "" }, num: 'V' , seventh: true},
+    //   {id: uuidv4(), root: 'C', type: {full: "Major", short: "maj", symbol: "" }, num: 'I' , seventh: false},
+    // ],
     progression: [
-      {id: uuidv4(), root: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: false},
-      {id: uuidv4(), root: 'G', type: {full: "Major", short: "maj", symbol: "" }, num: 'V' , seventh: false},
-      {id: uuidv4(), root: 'C', type: {full: "Major", short: "maj", symbol: "" }, num: 'I' , seventh: false},
+      {id: uuidv4(), root: 'D', type: {full: "Half-diminished seventh", short: "hdim7", symbol: "\uE8717" }, num: '0', seventh: true},
+      {id: uuidv4(), root: 'G', type: {full: "Dominant seventh", short: "dom7", symbol: "7"}, num: '0', seventh: true},
+      {id: uuidv4(), root: 'C', type: {full: "Minor", short: "min", symbol: "m" }, num: '0', seventh: false},
     ],
+  }
+
+  const copyLine = (prog: Progression) => {
+    const newLineObj = {
+      lineId: uuidv4(), 
+      progression: prog.map((chord: Chord) => {
+        return {...chord, id: uuidv4()}
+      }),
+    };
+
+    return newLineObj;
   }
 
   const [lineArray, setLineArray] = useState<Line[]>([]);
@@ -147,10 +128,9 @@ export const ProgBar = () => {
   };
 
   const swap = (array: Array<any>, a: number, b: number) => {
-    const copy = [...array];
-    copy[a] = array[b];
-    copy[b] = array[a];
-    return copy;
+    return (a < b)
+    ? [...array.slice(0, a), ...array.slice(a+1, b+1), array[a], ...array.slice(b+1)] 
+    : [...array.slice(0, b), array[a], ...array.slice(b, a), ...array.slice(a+1)]
   };
 
   const swapChords = (lineId: string, chordIndexA: number, chordIndexB: number) => {
@@ -181,7 +161,7 @@ export const ProgBar = () => {
   //   transition: decreaseBool ? 'width 100ms ease-out' : 'none',
   // };
 
-  console.log(lineArray);
+  // console.log(lineArray);
 
   return (
     <div className='componentWrapper'>
@@ -193,15 +173,14 @@ export const ProgBar = () => {
               <ProgLine key={lineId} lineId={lineId} prog={progression} chordFuncs={{add: addChord, remove: removeChord, swap: swapChords}}/>
               {
                 (lineArray.length > 1)
-                  ? <div className='removeLineButton' onClick={() => setLineArray((prev: any) => [...prev].filter((_, j) => j !== i))}>-</div>
+                  ? <div className='removeLineButton' onClick={() => setLineArray((prev: any) => [...prev].filter((_, j) => j !== i))}>×</div>
                   : <></>
               }
-              {/* <div className='removeLineButton' onClick={() => setLineArray((prev: any) => [...prev].filter((_, j) => j !== i))}>-</div> */}
             </div>
           ))}
         </StrictMode>
         <div style={{width: 'auto', display: 'flex', justifyContent: 'center'}}>
-          <div className='newLineButton' onClick={() => setLineArray((prev: any) => [...prev, defLineObj])}>+</div>
+          <div className='newLineButton' onClick={() => setLineArray((prev: any) => [...prev, copyLine(prev[prev.length-1].progression)])}>+</div>
         </div>
       </div>
     </div>

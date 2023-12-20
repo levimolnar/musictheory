@@ -34,7 +34,7 @@ export const NoteCard = ({chord, seventh=false}: {
   return (
     <div className={'cardContent ' + type.short} style={contentStyle}>
       <div className='cardNumber' style={numberStyle}>{num}</div>
-      <div className='textContainer' style={containerStyle}>
+      <div className='textContainer' style={containerStyle} title={type.full + ' chord'}>
         {/* <div className='rootText' style={rootStyle}>{root[0]}{root.slice(1,)}</div> */}
         <div className='rootText' style={rootStyle}>{root}</div>
         {seventh ? <div className='seventhText'>{type.symbol}</div> : <></>}

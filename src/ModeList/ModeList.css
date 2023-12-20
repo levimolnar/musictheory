@@ -1,0 +1,181 @@
+@font-face {
+  font-family: 'Bravura';
+  src: 
+    url('../fonts/BravuraText.woff') format('woff'),
+    url('../fonts/BravuraText.woff2') format('woff2');
+}
+
+:root {
+  --defShadow: -3px 3px 3px #0000002b;
+}
+
+.componentWrapper {
+  position: relative;
+  width: min-content; height: min-content;
+}
+
+.componentWrapperFill {
+  position: relative;
+  width: 100%; height: min-content;
+}
+
+.backdrop {
+  position: absolute;
+  width: 100%; height: 100%;
+  z-index: 0;
+
+  border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  box-shadow: var(--defShadow);
+}
+
+.blur {
+  backdrop-filter:
+    invert(1)
+    hue-rotate(180deg)
+    blur(10px)
+    contrast(40%)
+    brightness(100%);
+    
+  /* mix-blend-mode: multiply; */
+  /* background-color: #5d5dc555; */
+  background-image: url(noise.png);
+}
+
+.settingsBar {
+  width: auto; height: 30px;
+  z-index: 1;
+
+  border-top: 1px solid transparent; border-right: 1px solid transparent;
+
+  display: flex;
+  flex-direction: row;
+
+  /* margin-bottom: 5px; */
+}
+
+.settingsBar * {
+  z-index: 1;
+}
+
+.transposeButton {
+  cursor: pointer;
+  line-height: 13px;
+  font-size: 1.2em;
+  border-radius: 2px; 
+  background: linear-gradient(#ffffff44, transparent);
+
+  user-select: none;
+}
+
+.transposeButton:hover {
+  background: #ffffff44;
+  color: #fff;
+}
+
+.seventhButton {
+  margin: 5px 10px 5px auto; 
+  width: 31px;
+  line-height: 17px;
+  text-align: center;
+  border-radius: 5px;
+  font-family: 'Trebuchet MS';
+  font-size: .8em; 
+  font-weight: bold;
+  filter: drop-shadow(-2px 2px 3px #00000055);
+  cursor: pointer;
+  user-select: none;
+}
+
+.seventhButton:hover {
+  filter: invert(1);
+}
+
+.modeList {
+  width: max-content;
+  z-index: 1;
+
+  border-top: 1px solid transparent; border-right: 1px solid transparent;
+  
+  /* border-radius: 8px;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+  background-color: #ffffff22;
+  box-shadow: var(--defShadow); */
+
+  display: flex;
+  flex-direction: row;
+}
+
+.modeList * {
+  z-index: 1;
+}
+
+.modeListHeaders {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 8px 0 0 8px;
+  overflow: hidden;
+
+  box-shadow: inset -2px 0 2px #00000022;
+}
+
+.referenceButton {
+  width: 18px; height: 18px;
+  background: radial-gradient(#0000002b 25%, #ffffff44 25% 40%, #0000002b 40%, transparent 66.6%);
+}
+
+.referenceButton:hover {
+  background: radial-gradient(#ffffff44 25%, #0000002b 33.3%, transparent 66.6%);
+}
+
+.modeListContent {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 0 10px 10px 0;
+  overflow: hidden;
+}
+
+.headerRow {
+  height: 50px;
+  padding: 0 10px 0 10px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #ffffff22;
+  box-shadow: 0px 2px 2px #ffffff33;
+}
+
+.modeTag {
+  height: 19px;
+
+  /* font-family: 'Calibri'; */
+  font-family: 'Lacquer';
+
+  line-height: 17px;
+  font-size: 1em;
+
+  background-color: #333;
+  color: #fff;
+  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
+
+  padding: 5px 15px 5px 15px;
+  border-radius: 4px;
+}
+
+.contentRow {
+  width: auto; height: 50px;
+  padding: 0 10px 0 10px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+
+  overflow: hidden;
+
+  box-shadow: 0px 2px 2px #ffffff33;
+}

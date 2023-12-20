@@ -3,7 +3,7 @@ import './App.css';
 
 import { ModeContext } from './ModeContext';
 import { ProgBar } from './ProgBar';
-import { Chart } from './Chart';
+import { ModeList } from './ModeList';
 
 function App() {
   return (
@@ -15,18 +15,18 @@ function App() {
         <ModeContext>
           <Bar />
           <div style={{height: '6px'}}/>
-          <Chart />
+          <ModeList />
         </ModeContext>
       </div> */}
       {/* <div style={{width: '50px'}}/> */}
       <div>
         <ModeContext>
           <div style={{display: 'flex'}}>
-            <Chart />
+            <ModeList />
             <div style={{width: '25px'}}/>
-            <div style={{height: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'start'}}>
-              <ProgBar />
-            </div>
+            <ProgBar />
+            {/* <div style={{width: '50px'}}/>
+            <ProgBar /> */}
           </div>
         </ModeContext>
       </div>
