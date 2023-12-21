@@ -49,11 +49,12 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    width: '100%',
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <div className='empty'>+</div>
+      <div className='empty'>＋</div>
     </div>
   )
 };
@@ -67,13 +68,22 @@ export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFu
       // id={'sortable-' + lineId}
       id={lineId}
     >
-      <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
+      {/* <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
         {
           prog.length
             ? prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) 
             : <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
         }
-      </div>
+      </div> */}
+      {
+        prog.length
+          ? <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
+              { prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) }
+            </div>
+          : <div className='line' style={{width: '100%', boxShadow: '0px 2px 2px #ffffff33'}}>
+              <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
+            </div>
+      }
     </SortableContext>
   )
 }
@@ -179,8 +189,30 @@ export const ProgBar = () => {
             </div>
           ))}
         </StrictMode>
-        <div style={{width: 'auto', display: 'flex', justifyContent: 'center'}}>
-          <div className='newLineButton' onClick={() => setLineArray((prev: any) => [...prev, copyLine(prev[prev.length-1].progression)])}>+</div>
+        {/* <div style={{width: 'auto', display: 'flex', justifyContent: 'center'}}>
+          <div 
+            className='newLineButton' 
+            onClick={() => setLineArray((prev: any) => [...prev, copyLine(prev[prev.length-1].progression)])}
+          >
+            +
+          </div>
+        </div> */}
+        <div style={{width: '100%', position: 'absolute', bottom: '-30px'}}>
+          <div style={{width: 'auto', display: 'flex', justifyContent: 'center', gap: '5px'}}>
+            <div 
+              className='newLineButton' 
+              onClick={() => setLineArray((prev: any) => [...prev, copyLine(prev[prev.length-1].progression)])}
+            >
+              c
+            </div>
+            <div 
+              className='newLineButton'
+              // style={{fontSize: '1.3em'}}
+              onClick={() => setLineArray((prev: any) => [...prev, copyLine([])])}
+            >
+              e
+            </div>
+          </div>
         </div>
       </div>
     </div>

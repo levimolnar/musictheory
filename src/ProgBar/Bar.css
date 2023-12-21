@@ -55,7 +55,7 @@
   cursor: pointer;
 }
 
-.newLineButton {
+/* .newLineButton {
   position: absolute;
   bottom: -30px;
 
@@ -63,6 +63,17 @@
   text-align: center;
   border-radius: 50%;
   font-size: 1.3em;
+  background-color: #00000033;
+  color: #ffffffdd;
+
+  cursor: pointer;
+} */
+
+.newLineButton {
+  width: 20px; height: 20px; line-height: 18px;
+  text-align: center;
+  border-radius: 50%;
+  font-family: 'Trebuchet MS';
   background-color: #00000033;
   color: #ffffffdd;
   /* font-weight: bold; */

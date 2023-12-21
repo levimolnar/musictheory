@@ -36,13 +36,38 @@ const SettingsBar = ({
       <div className='backdrop blur'/>
       <div className='settingsBar'>
         <div style={{margin: '2px 0 2px 0', display: 'flex', borderRight: '2px solid #00000055'}}>
-          <div style={{backgroundColor: '#333', color: '#fff', textAlign: 'center', width: '22px', height: '22px', lineHeight: '22px', borderRadius: '50%', fontSize: '.8em', margin: '1.5px 0 1.5px 10px', borderTop: '1px solid #ffffff88', borderRight: '1px solid #ffffff88'}}>{transpose}</div>
+          <div style={{
+            backgroundColor: '#333', 
+            color: '#fff', 
+            textAlign: 'center', 
+            width: '22px', 
+            height: '22px', 
+            lineHeight: '22px', 
+            borderRadius: '50%', 
+            fontSize: '.8em', 
+            margin: '1.5px 0 1.5px 10px', 
+            borderTop: '1px solid #ffffff88', 
+            borderRight: '1px solid #ffffff88'
+          }}>{transpose}</div>
           <div style={{display: 'flex', flexDirection: 'column', height: '26px', margin: '0 5px 0 5px'}}>
             <div className='transposeButton' onClick={() => setTranspose((t) => mod((t+1), 12))}>▴</div>
             <div className='transposeButton' onClick={() => setTranspose((t) => mod((t-1), 12))}>▾</div>
           </div>
         </div>
-        <select style={{height: '20px', backgroundColor: '#333', color: 'white', borderRadius: '10px', paddingLeft: '5px', margin: '5px', outline: 'none', border: 'none'}} value={modeTab} onChange={(e: any) => setModeTab(e.target.value)}>
+        <select 
+          style={{
+            height: '20px', 
+            backgroundColor: '#333', 
+            color: 'white', 
+            borderRadius: '10px', 
+            paddingLeft: '5px', 
+            margin: '5px', 
+            outline: 'none', 
+            border: 'none'
+          }} 
+          value={modeTab} 
+          onChange={(e: any) => setModeTab(e.target.value)}
+        >
           { Object.keys(defModeRecipes).map(ms => <option key={'option-' + ms} value={ms}>{ms}</option>) }
         </select>
         <div 
@@ -169,13 +194,15 @@ export const ModeList = () => {
     return transposedScaleObj;
   }
 
-  useEffect(() => {
+  const calcTransposedData = () => {
     const modeObj = defModeRecipes[modeTab];
     const transposedModeObj = transposeObj(modeObj, transpose);
     setModes(transposedModeObj);
-
     setNumRef(transposeRecipe(Object.values(defModeRecipes[refCoord[0]])[refCoord[1]], transpose));
-  }, [modeTab, transpose, refCoord]);
+  };
+
+  useEffect(() => { calcTransposedData() }, [modeTab, transpose, refCoord]);
+  // useEffect(() => { calcTransposedData() }, [transpose, refCoord]);
 
   const [uniqueModeListId] = useState(uuidv4());
 
@@ -193,26 +220,25 @@ export const ModeList = () => {
                     <div style={{position: 'absolute', zIndex: '2', width: '30px', height: '100%', pointerEvents: 'none'}}>
                       <div style={{position: 'absolute', width: '18px', height: '18px', top: `${refCoord[1]*50 + 16}px`, background: (modeTab === refCoord[0]) ? 'radial-gradient(#ff0055 33.3%, transparent 50%)' : 'none', transition: (modeTab === refCoord[0]) ? 'top 250ms ease-in-out' : 'none'}}></div> 
                     </div>                    
-                    { Object.keys(modes).map((modeName: string, i) =>
-                      <div style={{width: '25px', height: '50px', display: 'flex', alignItems: 'center'}}>
-                        <div 
-                          className='referenceButton'
-                          onClick={() => {
-                            setRefCoord([modeTab, i]);
-                            // setNumRef(modes[modeName]);
-                          }}/>
+                    { 
+                      Object.keys(modes).map((modeName: string, modeIndex: number) =>
+                        <div style={{width: '25px', height: '50px', display: 'flex', alignItems: 'center'}}>
+                          <div 
+                            className='referenceButton'
+                            onClick={() => setRefCoord([modeTab, modeIndex])}
+                          />
                         </div> 
                       ) 
                     }
                   </div>
                   <div className='modeListHeaders'>
-                    { Object.keys(modes).map((modeName: string) => <ScaleHeader key={'header-' + modeName + uniqueModeListId} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
+                    { Object.keys(modes).map((modeName: string, modeIndex: number) => <ScaleHeader key={`${uniqueModeListId}-H${modeIndex}`} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
                   </div>
                   <div className='modeListContent'>
-                    { Object.keys(modes).map((modeName: string) => <ScaleRow key={'content-' + modeName + uniqueModeListId} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
+                    { Object.keys(modes).map((modeName: string, modeIndex: number) => <ScaleRow key={`${uniqueModeListId}-R${modeIndex}`} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
                   </div>
                 </>
-              ) : <div style={{width: 'min-content', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
+              ) : <div style={{width: '350px', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
             }
           </div>
         </div>
