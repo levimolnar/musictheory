@@ -5,12 +5,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 import './Bar.css';
 
-import { NoteCard } from '../NoteCard';
+import { NoteCard, NoteCardWide } from '../NoteCard';
 import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 import { Chord, Progression, Line } from '../types';
 
-const SortableItem = ({chord, setFunc, index, seventh}: {chord: Chord, setFunc: any, index: number, seventh: boolean}) => {
+const SortableItem = ({
+  chord, 
+  setFunc, 
+  index, 
+  seventh, 
+}: {
+  chord: Chord, 
+  setFunc: any, 
+  index: number, 
+  seventh?: boolean, 
+}) => {
+
   const {
     attributes,
     listeners,
@@ -20,7 +31,7 @@ const SortableItem = ({chord, setFunc, index, seventh}: {chord: Chord, setFunc: 
     isDragging,
   } = useSortable({
     id: chord.id, 
-    data: {payload: {chord, setFunc, index, origin: 'progBar', seventh}},
+    data: {chord, setFunc, index, origin: 'progBar', seventh},
   })
 
   const style = {
@@ -32,7 +43,7 @@ const SortableItem = ({chord, setFunc, index, seventh}: {chord: Chord, setFunc: 
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <NoteCard chord={chord} seventh={seventh}/>
+      { seventh ? <NoteCardWide chord={chord}/> : <NoteCard chord={chord}/> }
     </div>
   )
 };
@@ -44,7 +55,7 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
     setNodeRef,
     transform,
     transition,
-  } = useSortable({id: id, disabled: true, data: {payload: {setFunc: setFunc, origin: 'progBar'}}})
+  } = useSortable({id: id, disabled: true, data: {setFunc, origin: 'progBar'}})
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -61,30 +72,30 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFuncs: any, lineId: string}) => {
 
+  const {setNodeRef} = useDroppable({
+    id: `${lineId}-droppable`,
+    data: {origin: 'droppable', setFunc: chordFuncs} 
+  });
+
   return (
-    <SortableContext
-      items={prog.map((i: any) => i.id)}
-      strategy={horizontalListSortingStrategy} 
-      // id={'sortable-' + lineId}
-      id={lineId}
-    >
-      {/* <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
+    <>
+      <SortableContext
+        items={prog.map((i: any) => i.id)}
+        strategy={horizontalListSortingStrategy} 
+        id={lineId}
+      >
         {
           prog.length
-            ? prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) 
-            : <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
+            ? <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
+                { prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) }
+              </div>
+            : <div className='line' style={{width: '100%', boxShadow: '0px 2px 2px #ffffff33'}}>
+                <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
+              </div>
         }
-      </div> */}
-      {
-        prog.length
-          ? <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
-              { prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) }
-            </div>
-          : <div className='line' style={{width: '100%', boxShadow: '0px 2px 2px #ffffff33'}}>
-              <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
-            </div>
-      }
-    </SortableContext>
+      </SortableContext>
+      <div ref={setNodeRef} style={{width: '100%', backgroundColor: '#ffff0011'}} />
+    </>
   )
 }
 
@@ -92,11 +103,6 @@ export const ProgBar = () => {
   
   const defLineObj: Line = {
     lineId: uuidv4(), 
-    // progression: [
-    //   {id: uuidv4(), root: 'D', type: {full: "Minor", short: "min", symbol: "m"}, num: 'ii', seventh: true},
-    //   {id: uuidv4(), root: 'G', type: {full: "Major", short: "maj", symbol: "" }, num: 'V' , seventh: true},
-    //   {id: uuidv4(), root: 'C', type: {full: "Major", short: "maj", symbol: "" }, num: 'I' , seventh: false},
-    // ],
     progression: [
       {id: uuidv4(), root: 'D', type: {full: "Half-diminished seventh", short: "hdim7", symbol: "\uE8717" }, num: '0', seventh: true},
       {id: uuidv4(), root: 'G', type: {full: "Dominant seventh", short: "dom7", symbol: "7"}, num: '0', seventh: true},
@@ -121,7 +127,7 @@ export const ProgBar = () => {
     setLineArray([defLineObj])
   }, [])
 
-  const addChord = (lineId: string, chordIndex: number, chord: Chord) => {
+  const chordAppend = (lineId: string, chordIndex: number, chord: Chord) => {
     setLineArray((prev: Line[]) => prev.map((line: Line) => {
       return (line.lineId !== lineId )
       ? line
@@ -129,7 +135,15 @@ export const ProgBar = () => {
     }));
   };
 
-  const removeChord = (lineId: string, chordId: string) => {
+  const chordPush = (lineId: string, chord: Chord) => {
+    setLineArray((prev: Line[]) => prev.map((line: Line) => {
+      return (line.lineId !== lineId )
+      ? line
+      : {...line, progression: [...line.progression, chord]}
+    }));
+  };
+
+  const chordRemove = (lineId: string, chordId: string) => {
     setLineArray((prev: Line[]) => prev.map((line: Line) => {
       return (line.lineId !== lineId )
       ? line
@@ -137,13 +151,22 @@ export const ProgBar = () => {
     }));
   };
 
-  const swap = (array: Array<any>, a: number, b: number) => {
-    return (a < b)
-    ? [...array.slice(0, a), ...array.slice(a+1, b+1), array[a], ...array.slice(b+1)] 
-    : [...array.slice(0, b), array[a], ...array.slice(b, a), ...array.slice(a+1)]
+  const chordPop = (lineId: string, chord: Chord) => {
+    setLineArray((prev: Line[]) => prev.map((line: Line) => {
+      return (line.lineId !== lineId )
+      ? line
+      : {...line, progression: line.progression.slice(0, -1)}
+    }));
   };
 
-  const swapChords = (lineId: string, chordIndexA: number, chordIndexB: number) => {
+  const chordSwap = (lineId: string, chordIndexA: number, chordIndexB: number) => {
+
+    const swap = (array: Array<any>, a: number, b: number) => {
+      return (a < b)
+      ? [...array.slice(0, a), ...array.slice(a+1, b+1), array[a], ...array.slice(b+1)] 
+      : [...array.slice(0, b), array[a], ...array.slice(b, a), ...array.slice(a+1)]
+    };
+
     setLineArray((prev: Line[]) => prev.map((line: Line) => {
       return (line.lineId !== lineId )
       ? line
@@ -151,27 +174,7 @@ export const ProgBar = () => {
     }));
   };
 
-  // const [barWidth, setBarWidth] = useState<number>(0);
-  // const [decreaseBool, setDecreaseBool] = useState<boolean | undefined>(undefined);
-
-  // const NOTE_CARD_WIDTH = 25;
-  // const MARGIN_WIDTH = 8;
-
-  // // check if width change is increase or decrease, 
-  // useEffect(() => {
-  //   setDecreaseBool(barWidth > items.length*NOTE_CARD_WIDTH + (items.length-1)*MARGIN_WIDTH);
-  //   setBarWidth(items.length*NOTE_CARD_WIDTH + (items.length-1)*MARGIN_WIDTH);
-  // }, [items]);
-
-  // // apply transition effect only in case of width decrease
-  // const widthStyle = {
-  //   // width: `${barWidth}px`,
-  //   // width: 'min-content',
-  //   width: 'min-content',
-  //   transition: decreaseBool ? 'width 100ms ease-out' : 'none',
-  // };
-
-  // console.log(lineArray);
+  const chordFuncs = {chordAppend, chordPush, chordRemove, chordPop, chordSwap};
 
   return (
     <div className='componentWrapper'>
@@ -180,7 +183,7 @@ export const ProgBar = () => {
         <StrictMode>
           {lineArray.map(({lineId, progression}: Line, i: number) => (
             <div style={{display: 'flex'}}>
-              <ProgLine key={lineId} lineId={lineId} prog={progression} chordFuncs={{add: addChord, remove: removeChord, swap: swapChords}}/>
+              <ProgLine key={lineId} lineId={lineId} prog={progression} chordFuncs={chordFuncs}/>
               {
                 (lineArray.length > 1)
                   ? <div className='removeLineButton' onClick={() => setLineArray((prev: any) => [...prev].filter((_, j) => j !== i))}>×</div>
@@ -189,14 +192,6 @@ export const ProgBar = () => {
             </div>
           ))}
         </StrictMode>
-        {/* <div style={{width: 'auto', display: 'flex', justifyContent: 'center'}}>
-          <div 
-            className='newLineButton' 
-            onClick={() => setLineArray((prev: any) => [...prev, copyLine(prev[prev.length-1].progression)])}
-          >
-            +
-          </div>
-        </div> */}
         <div style={{width: '100%', position: 'absolute', bottom: '-30px'}}>
           <div style={{width: 'auto', display: 'flex', justifyContent: 'center', gap: '5px'}}>
             <div 
@@ -207,7 +202,6 @@ export const ProgBar = () => {
             </div>
             <div 
               className='newLineButton'
-              // style={{fontSize: '1.3em'}}
               onClick={() => setLineArray((prev: any) => [...prev, copyLine([])])}
             >
               e

@@ -6,7 +6,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable } from '@dnd-kit/core';
 import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 
-import { NoteCard } from '../NoteCard';
+import { NoteCard, NoteCardWide } from '../NoteCard';
 import { getIntervalStrings, getSpellingPath, getNumerals, getIntervalString, getOffset } from './modeFunctions';
 import { characterMatrix, chordIntervals, defModeRecipes } from './modeData';
 
@@ -93,14 +93,14 @@ const ChordDraggable = ({chord, setFunc, index}: {chord: any, setFunc: any, inde
     isDragging,
   } = useDraggable({
     id: chord.id, 
-    data: {payload: {chord, setFunc, index, origin: 'modeList', seventh: seventh}},
+    data: {chord, setFunc, index, origin: 'modeList', seventh: seventh},
   })
 
   const dragStyle = { opacity: isDragging ? '0' : '1' }
 
   return (
     <div style={dragStyle} ref={setNodeRef} {...attributes} {...listeners}>
-      <NoteCard chord={chord} seventh={seventh}/>
+      { seventh ? <NoteCardWide chord={chord}/> : <NoteCard chord={chord}/> }
     </div>
   )
 }
@@ -219,7 +219,7 @@ export const ModeList = () => {
                   <div style={{position: 'absolute', left: '-30px'}}>
                     <div style={{position: 'absolute', zIndex: '2', width: '30px', height: '100%', pointerEvents: 'none'}}>
                       <div style={{position: 'absolute', width: '18px', height: '18px', top: `${refCoord[1]*50 + 16}px`, background: (modeTab === refCoord[0]) ? 'radial-gradient(#ff0055 33.3%, transparent 50%)' : 'none', transition: (modeTab === refCoord[0]) ? 'top 250ms ease-in-out' : 'none'}}></div> 
-                    </div>                    
+                    </div>
                     { 
                       Object.keys(modes).map((modeName: string, modeIndex: number) =>
                         <div style={{width: '25px', height: '50px', display: 'flex', alignItems: 'center'}}>

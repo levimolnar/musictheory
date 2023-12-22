@@ -3,9 +3,10 @@ import { useState, useEffect, createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DndContext, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
+// import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 // import { CSS } from '@dnd-kit/utilities';
 // import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
-import { NoteCard } from '../NoteCard';
+import { NoteCard, NoteCardWide } from '../NoteCard';
 import { Payload } from '../types';
 
 export const ProgContext = createContext<any>(undefined);
@@ -26,66 +27,89 @@ export const ModeContext = ({children}: {children: any}) => {
   const handleDragStart = ({active}: any) => {
     setBlocked(false);
     setThrottled(false);
-    if (active.data.current.payload) { setPayloadStorage(active.data.current.payload) };
+    if (active.data.current) { setPayloadStorage(active.data.current) };
   }
 
   const handleDragOver = ({active, over}: any) => {
+
     if (!payloadStorage) { return };
 
-    if (!over || !over.data.current) {
-      // if object hovered is not a droppable zone
+    if (!over || (active.data.current.hasOwnProperty("sortable") && active.data?.current?.sortable?.containerId !== over?.data?.current?.sortable?.containerId)) { 
 
-      if (active.data.current.sortable) {
-        // if from sortable, remove card at index from sortable
+      if (!active.data.current.sortable) { return };
+      if (over?.data?.current?.origin === "droppable") { return };
 
-        const {remove: itemRemove} = active.data.current.payload.setFunc;
-        const activeContainerId = active.data.current.sortable.containerId;
-        itemRemove(activeContainerId, active.data.current.payload.chord.id);
-
-        setBlocked(false);
-        throttle(100);
-        return
-        
-      } else { return };
-    };
-
-    // possibly redundant! try to incorporate!
-    if (active.data.current.hasOwnProperty("sortable") && active.data.current.sortable.containerId !== over.data.current.sortable.containerId) {
-      // fix issue where dragging from sortables next to eachother won't encounter '!over', thus won't remove item.
-
-      const {remove: itemRemove} = active.data.current.payload.setFunc;
+      const {chordRemove} = active.data.current.setFunc;
       const activeContainerId = active.data.current.sortable.containerId;
-      itemRemove(activeContainerId, active.data.current.payload.chord.id);
+      chordRemove(activeContainerId, active.data.current.chord.id);
 
       setBlocked(false);
       throttle(100);
-      return
+      return;
     };
+
+    // if (!over || !over.data.current) {
+    //   // if object hovered is not a droppable zone
+
+    //   if (active.data.current.sortable) {
+    //     // if from sortable, remove card at index from sortable
+
+    //     const {chordRemove} = active.data.current.setFunc;
+    //     const activeContainerId = active.data.current.sortable.containerId;
+    //     chordRemove(activeContainerId, active.data.current.chord.id);
+
+    //     setBlocked(false);
+    //     throttle(100);
+    //     return
+        
+    //   } else { return };
+    // };
+
+    // if (over.data.current.origin === "droppable" && !throttled) {
+    if (over.data.current.origin === "droppable") {
+      
+      const {chordPush} = over.data.current.setFunc;
+      const containerId = over.id.slice(0,36);
+
+      chordPush(containerId, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
+      setBlocked(true);
+      throttle(100)
+
+      return; 
+    };
+
+    // possibly redundant! try to incorporate!
+    // if (active.data.current.hasOwnProperty("sortable") && active.data.current.sortable.containerId !== over.data.current.sortable.containerId) {
+    //   // fix issue where dragging from sortables next to eachother won't encounter '!over', thus won't remove item.
+
+    //   const {chordRemove} = active.data.current.setFunc;
+    //   const activeContainerId = active.data.current.sortable.containerId;
+    //   chordRemove(activeContainerId, active.data.current.chord.id);
+
+    //   setBlocked(false);
+    //   throttle(100);
+    //   return
+    // };
 
     if (payloadStorage.chord && !throttled) {
 
-      const {index: newIndex, items } = over.data.current.sortable;
-      const {add: itemAdd, swap: itemSwap} = over.data.current.payload.setFunc;
+      const {index: newIndex, items} = over.data.current.sortable;
+      const {chordAppend, chordPush} = over.data.current.setFunc;
       const containerId = over.data.current.sortable.containerId;
 
       const duplicateIndex = items.findIndex((id: any) => id === payloadStorage.chord.id);
       
       if (duplicateIndex === -1 && !blocked) {
-        itemAdd(containerId, newIndex, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
+        // chordAppend(containerId, newIndex, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
+        chordPush(containerId, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
         setBlocked(true);
         throttle(100);
-        return;
-      } else {
-        // itemSwap(containerId, duplicateIndex, newIndex);
-        // throttle(100);
-        // setBlocked(true);
         return;
       };
     };
   }
 
   const handleDragEnd = ({active, over}: any) => {
-
     if (!payloadStorage) { return };
     if (payloadStorage.origin === 'modeList') {
       // reset id of dragged modeList item to prevent copies
@@ -96,26 +120,13 @@ export const ModeContext = ({children}: {children: any}) => {
       });
     };
 
-    if (!active.data.current.payload) { return }; // can occur in between progBars
+    if (!active.data.current) { return }; // can occur in between progBars
     if (!over) { return };
+    if (!over.data.current.hasOwnProperty("sortable")) { return };
     
-    // correct swap to wrong index
-    // if (active.data.current.payload.index !== over.data.current.payload.index) {
-    //   const {swap: itemSwap} = over.data.current.payload.setFunc;
-    //   const containerId = over.data.current.sortable.containerId;
-
-    //   console.log(active.data.current.payload.index, over.data.current.payload.index);
-    //   itemSwap(containerId, active.data.current.payload.index, over.data.current.payload.index);
-    // };
-
-
-    // if (active.data.current.payload.index !== over.data.current.payload.index) {
-    const {swap: itemSwap} = over.data.current.payload.setFunc;
+    const {chordSwap} = over.data.current.setFunc;
     const containerId = over.data.current.sortable.containerId;
-
-    // console.log(active.data.current.payload.index, over.data.current.payload.index);
-    itemSwap(containerId, active.data.current.payload.index, over.data.current.payload.index);
-    // };
+    chordSwap(containerId, active.data.current.index, over.data.current.index);
   };
 
 
@@ -127,7 +138,7 @@ export const ModeContext = ({children}: {children: any}) => {
       onDragCancel={handleDragEnd}
     >
       {children}
-      {payloadStorage ? <DragOverlay><NoteCard chord={payloadStorage.chord} seventh={payloadStorage.seventh}/></DragOverlay> : <></>}
+      {payloadStorage ? <DragOverlay>{ payloadStorage.seventh ? <NoteCardWide chord={payloadStorage.chord}/> : <NoteCard chord={payloadStorage.chord}/> }</DragOverlay> : <></>}
     </DndContext>
   );
 }
