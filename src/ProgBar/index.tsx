@@ -60,7 +60,7 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    width: '100%',
+    width: 'calc(100% - 20px)',
   }
 
   return (
@@ -77,25 +77,27 @@ export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFu
     data: {origin: 'droppable', setFunc: chordFuncs} 
   });
 
+  // console.log(lineId, prog);
+
   return (
-    <>
+    <div style={{width: '100%', boxShadow: '0px 2px 2px #ffffff33'}}>
       <SortableContext
-        items={prog.map((i: any) => i.id)}
+        items={prog.map((chord: Chord) => chord.id)}
         strategy={horizontalListSortingStrategy} 
         id={lineId}
       >
         {
           prog.length
-            ? <div className='line' style={{width: 'min-content', boxShadow: '0px 2px 2px #ffffff33'}}>
-                { prog.map((chord: any, i) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) }
+            ? <div className='line' style={{width: 'min-content'}}>
+                { prog.map((chord: any, i: any) => <SortableItem key={chord.id} chord={chord} setFunc={chordFuncs} index={i} seventh={chord.seventh}/>) }
               </div>
-            : <div className='line' style={{width: '100%', boxShadow: '0px 2px 2px #ffffff33'}}>
+            : <div className='line' style={{width: '100%'}}>
                 <EmptyItem id={'empty-' + lineId} setFunc={chordFuncs}/>
               </div>
         }
       </SortableContext>
-      <div ref={setNodeRef} style={{width: '100%', backgroundColor: '#ffff0011'}} />
-    </>
+      {/* <div ref={setNodeRef} style={{width: '100%', backgroundColor: '#ffff0033'}} /> */}
+    </div>
   )
 }
 
@@ -181,7 +183,7 @@ export const ProgBar = () => {
       <div className='backdrop blur'/>
       <div className='bar'>
         <StrictMode>
-          {lineArray.map(({lineId, progression}: Line, i: number) => (
+          {lineArray.map(({lineId, progression}: Line, i: any) => (
             <div style={{display: 'flex'}}>
               <ProgLine key={lineId} lineId={lineId} prog={progression} chordFuncs={chordFuncs}/>
               {
