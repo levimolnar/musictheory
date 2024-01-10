@@ -15,6 +15,7 @@ export const ModeContext = ({children}: {children: any}) => {
 
   let debounceId: NodeJS.Timeout | undefined;
   let parentId: string | undefined;
+  let containerId: string | undefined;
   
   const debounce = (id: string, func: Function, ms?: number) => {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
@@ -42,20 +43,54 @@ export const ModeContext = ({children}: {children: any}) => {
     if (active.data.current) { 
       setPayloadStorage(active.data.current);
       parentId = active.data.current?.sortable?.containerId;
+      console.log('START parentID: ', parentId);
     };
   }
 
   const handleDragOver = async ({active, over}: any) => {
 
-    // console.log('OVER', {debounce: debounceId, parent: parentId});
+    const overFunc = async () => {
+      if (!payloadStorage) { return };
 
-    if (!payloadStorage) { return };
+      // CASE 1: Item dragged out of dnd-kit component (must be ProgBar, no other options).
+      if (!over) { 
 
-    // CASE 1: Item dragged out of dnd-kit component (must be ProgBar, no other options).
-    if (!over) { 
+        // ensure item is currently part of ProgBar before removing.
+        if (active.data.current.origin === "progBar") {
+          const {chordRemove} = active.data.current.setFunc;
+          const activeContainerId = active.data.current?.sortable?.containerId;
+          chordRemove(activeContainerId, active.data.current.chord.id);
 
-      // ensure item is currently part of ProgBar before removing.
-      if (active.data.current.origin === "progBar") {
+          parentId = undefined;
+        };
+
+        console.log('CASE 1')
+        cancelDebounce();
+        return;
+      }
+
+      // sometimes handleDragStart has not yet finished, so wait for parentId to be set.
+      if (active.data.current?.sortable) {
+        while(!parentId) {
+          await new Promise(resolve => setTimeout(resolve, 10));
+        }
+      };
+
+      containerId = over.data.current?.sortable?.containerId;
+      console.log('containerId', over.data.current?.sortable?.containerId);
+
+      // CASE 2: Item dragged around ProgBar it is already part of.
+      if (containerId === parentId) { 
+        console.log('CASE 2')
+        return 
+      };
+
+      // CASE 3: Item dragged to another component (must be other ProgBar, no other options).
+      if (debounceId) { cancelDebounce() };
+      
+      if (active.data.current?.origin === "progBar") {
+        console.log('CASE 3', 'OVER parentID: ', parentId, 'containerID: ', containerId);
+        
         const {chordRemove} = active.data.current.setFunc;
         const activeContainerId = active.data.current?.sortable?.containerId;
         chordRemove(activeContainerId, active.data.current.chord.id);
@@ -63,55 +98,33 @@ export const ModeContext = ({children}: {children: any}) => {
         parentId = undefined;
       };
 
-      console.log('CASE 1')
+      const {items, index} = over.data.current.sortable;
+      const {chordAppend} = over.data.current.setFunc;
 
-      cancelDebounce();
-      return;
-    }
+      const duplicateIndex = items.findIndex((id: any) => id === payloadStorage.chord.id);
 
-    const containerId = over.data.current?.sortable?.containerId;
-
-    // sometimes handleDragStart has not yet finished, so wait for parentId to be set.
-    if (active.data.current?.sortable) {
-      while(!parentId) await new Promise(resolve => setTimeout(resolve, 10));
-    };
-
-    // CASE 2: Item dragged around ProgBar it is already part of.
-    if (containerId === parentId) { 
-      console.log('CASE 2')
-      return 
-    };
-
-    // CASE 3: Item dragged to another component (must be other ProgBar, no other options).
-    if (debounceId) { cancelDebounce() };
-    
-    if (active.data.current.origin === "progBar") {
-      console.log('from ProgBar to other ProgBar!', containerId, parentId);
+      if (duplicateIndex === -1) {
+        debounce(
+          over.data.current?.sortable?.containerId, 
+          () => { 
+            // console.log(containerId, index, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id}, chordAppend);
+            chordAppend(containerId, index, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
+          }
+        );
+      };
       
-      const {chordRemove} = active.data.current.setFunc;
-      const activeContainerId = active.data.current?.sortable?.containerId;
-      chordRemove(activeContainerId, active.data.current.chord.id);
-
-      parentId = undefined;
+      return;
     };
 
-    const {items, index} = over.data.current.sortable;
-    const {chordAppend} = over.data.current.setFunc;
+    await overFunc();
 
-    const duplicateIndex = items.findIndex((id: any) => id === payloadStorage.chord.id);
+    debounceId = undefined;
+    parentId = undefined;
+    containerId = undefined;
 
-    if (duplicateIndex === -1) {
-      debounce(
-        over.data.current?.sortable?.containerId, 
-        () => { 
-          // console.log(containerId, index, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id}, chordAppend);
-          chordAppend(containerId, index, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
-        }
-      );
-    };
+    console.log('ended!', debounceId, parentId, containerId);
     
-    return;
-  }
+  };
 
   const handleDragEnd = ({active, over}: any) => {
 
@@ -148,69 +161,3 @@ export const ModeContext = ({children}: {children: any}) => {
     </DndContext>
   );
 }
-
-
-
-
-
-  // const handleDragOver = ({active, over}: any) => {
-
-  //   if (!payloadStorage) { return };
-  //   if (!over) { return };
-
-  //   // if (!over || (active.data.current.hasOwnProperty("sortable") && active.data?.current?.sortable?.containerId !== over?.data?.current?.sortable?.containerId)) { 
-
-  //   //   if (!active.data.current.sortable) { return };
-  //   //   if (over?.data?.current?.origin === "droppable") { return };
-
-  //   //   const {chordRemove} = active.data.current.setFunc;
-  //   //   const activeContainerId = active.data.current.sortable.containerId;
-  //   //   chordRemove(activeContainerId, active.data.current.chord.id);
-
-  //   //   setBlocked(false);
-  //   //   // throttle(100);
-  //   //   return;
-  //   // };
-
-  //   // if (over.data.current.origin === "droppable") {
-      
-  //   //   const {chordPush} = over.data.current.setFunc;
-  //   //   const containerId = over.id.slice(0,36);
-
-  //   //   chordPush(containerId, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
-  //   //   setBlocked(true);
-  //   //   throttle(100)
-
-  //   //   return; 
-  //   // };
-
-  //   if (payloadStorage.chord) {
-
-  //     if (debounceId) {
-  //       clearTimeout(debounceId);
-  //       console.log(`${debounceId} cancelled`);
-  //     };
-
-  //     console.log('Timeout started');
-  //     const timeoutId: NodeJS.Timeout = setTimeout(() => {
-  //       // function();
-  //       console.log('Timeout completed');
-  //     }, 1000);
-
-  //     setDebounceId(timeoutId);
-
-  //     // const {index: newIndex, items} = over.data.current.sortable;
-  //     // const {chordAppend, chordPush} = over.data.current.setFunc;
-  //     // const containerId = over.data.current.sortable.containerId;
-
-  //     // const duplicateIndex = items.findIndex((id: any) => id === payloadStorage.chord.id);
-      
-  //     // if (duplicateIndex === -1 && !blocked) {
-  //     //   // chordAppend(containerId, newIndex, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
-  //     //   chordPush(containerId, {...payloadStorage.chord, seventh: payloadStorage.seventh, id: payloadStorage.chord.id});
-  //     //   setBlocked(true);
-  //     //   // throttle(100);
-  //     //   return;
-  //     // };
-  //   };
-  // }
