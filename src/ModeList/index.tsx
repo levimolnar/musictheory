@@ -75,7 +75,7 @@ const SettingsBar = ({
           onClick={() => setSeventhEnabled((prev) => !prev)} 
           style={{border: seventhEnabled ? '2px solid transparent' : '2px solid #ddd', color: seventhEnabled ? '#ddd' : '#ddd', background: seventhEnabled ? '#333' : 'none'}}
         >
-          7th
+          7
         </div>
       </div>
     </div>
@@ -132,39 +132,72 @@ const ScaleRow = ({scaleName, scaleRecipe}: {scaleName: string, scaleRecipe: num
   const {seventh, ref} = useContext(ModeListContext);
 
   const [chords, setChords] = useState<Array<{id: string, root: string, type: {full: string, short: string, symbol: string}, num: string}> | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
   useEffect(() => {
 
-    // const start = performance.now();
+    try {
 
-    const spellingPath = getSpellingPath(scaleRecipe);
+      let spellingPath: any;
+      try {
+        spellingPath = getSpellingPath(scaleRecipe);
+      } catch (error) {
+        throw new Error("An error occurred within the pitch spelling algorithm. [unknown]");
+      };
 
-    const chordsArray = scaleRecipe.map((x, i) => {
-      const [rootX, rootY] = spellingPath[i];
-      const root = characterMatrix[rootX][rootY];
-      const chordRecipe = Array.from({length: seventh ? 4 : 3 }, (_, j) => scaleRecipe[(i + 2*j) % scaleRecipe.length]);
-      const type = chordIntervals[+getIntervalString(chordRecipe)];
-      const offset = getOffset(x, ref!.numRef[i]);
+      if (!spellingPath || spellingPath.length < scaleRecipe.length) {
+        throw new Error("An error occurred within the pitch spelling algorithm. [premature end]");
+      }
 
-      return {id: uuidv4(), root, type, num: String(offset)};
-    });
-
+      if (seventh && scaleRecipe.length < 7) {
+        throw new Error("Seventh chords impossible, scale shorter than seven notes.");
+      }
     
-    // const end = performance.now();
-    // console.log(`${scaleName}: ${end - start} ms`);
-    
-    setChords(chordsArray);
+      const chordsArray = scaleRecipe.map((x, i) => {
+        const [rootX, rootY] = spellingPath[i];
+        const root = characterMatrix[rootX][rootY];
+        const chordRecipe = Array.from({length: seventh ? 4 : 3 }, (_, j) => scaleRecipe[(i + 2*j) % scaleRecipe.length]);
+        const type = chordIntervals[+getIntervalString(chordRecipe)];
+        const offset = getOffset(x, ref!.numRef[i]);
+
+        // console.log(root, type, offset);
+        
+        if (!root || !type) {
+          throw new Error('An unknown error occurred identifying one or more chords.');
+        }
+
+        return {id: uuidv4(), root, type, num: String(offset)};
+      });
+
+      setChords(chordsArray);
+    } catch (error: any) {
+      setChords(undefined);
+      setErrorMessage(error.message);
+    }
     
   }, [scaleName, scaleRecipe, ref, seventh]);
   
-  // console.log(chords);
-
   return (
     <div className='contentRow'>
       { 
         chords
         ? chords.map((chord, i) => <ChordDraggable key={chord.id} chord={chord} setFunc={setChords} index={i}/>)
-        : null
+        : <div 
+            style={{
+              width: '100%', 
+              height: '30px', 
+              lineHeight: '30px',
+              borderRadius: '4px', 
+              fontSize: '.8em', 
+              backgroundColor: '#ffff00', 
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span style={{padding: '0 15px 0 10px'}}>⚠</span>
+            {errorMessage}
+            <span style={{padding: '0 10px 0 15px'}}>⚠</span>
+          </div>
       }
     </div>
   )

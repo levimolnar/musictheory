@@ -52,9 +52,9 @@ export const ModeContext = ({children}: {children: any}) => {
     // CASE 1: Item dragged out of dnd-kit component (must be ProgBar, no other options).
     if (!over) { 
 
+      cancelDebounce();
       containerId = undefined;
       parentId = undefined;
-      cancelDebounce();
 
       // ensure item is currently child of ProgBar before removing.
       if (active.data.current.origin === "progBar") {
