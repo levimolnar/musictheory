@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import './Bar.css';
 
 import { NoteCard, NoteCardWide } from '../NoteCard';
-import { useDroppable } from '@dnd-kit/core';
 import { Chord, Progression, Line } from '../types';
 
 const SortableItem = ({
