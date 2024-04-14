@@ -233,8 +233,8 @@ export const ModeList = () => {
     setNumRef(transposeRecipe(Object.values(defModeRecipes[refCoord[0]])[refCoord[1]], transpose));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { calcTransposedData() }, [modeTab, transpose, refCoord]);
-  // useEffect(() => { calcTransposedData() }, [transpose, refCoord]);
 
   const [uniqueModeListId] = useState(uuidv4());
 

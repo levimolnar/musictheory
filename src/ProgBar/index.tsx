@@ -71,10 +71,10 @@ const EmptyItem = ({id, setFunc}: {id: string, setFunc: any}) => {
 
 export const ProgLine = ({prog, chordFuncs, lineId}: {prog: Progression, chordFuncs: any, lineId: string}) => {
 
-  const {setNodeRef} = useDroppable({
-    id: `${lineId}-droppable`,
-    data: {origin: 'droppable', setFunc: chordFuncs} 
-  });
+  // const {setNodeRef} = useDroppable({
+  //   id: `${lineId}-droppable`,
+  //   data: {origin: 'droppable', setFunc: chordFuncs} 
+  // });
 
   // console.log(lineId, prog);
 
@@ -126,6 +126,7 @@ export const ProgBar = () => {
 
   useEffect(() => {
     setLineArray([defLineObj])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const chordAppend = (lineId: string, chordIndex: number, chord: Chord) => {
