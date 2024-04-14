@@ -3,11 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import './ModeList.css';
 import { useState, useEffect, createContext, useContext } from 'react';
 
-import { DndContext, DragOverlay, rectIntersection, useDraggable, useDroppable } from '@dnd-kit/core';
-import { arrayMove, SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { useDraggable } from '@dnd-kit/core';
 
 import { NoteCard, NoteCardWide } from '../NoteCard';
-import { getIntervalStrings, getSpellingPath, getNumerals, getIntervalString, getOffset } from './modeFunctions';
+import { getSpellingPath, getIntervalString, getOffset } from './modeFunctions';
 import { characterMatrix, chordIntervals, defModeRecipes } from './modeData';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;

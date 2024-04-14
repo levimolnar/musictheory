@@ -1,11 +1,10 @@
 // The React component in this file deliberately strays from the React workflow because it features drag and drop events.
-// 
 
-import { useState, useEffect, createContext } from 'react';
+import { useState, createContext } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { DndContext, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
 
 import { NoteCard, NoteCardWide } from '../NoteCard';
 import { Payload } from '../types';

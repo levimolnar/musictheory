@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, StrictMode } from 'react';
+import { useState, useEffect, StrictMode } from 'react';
 import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import './Bar.css';
 
 import { NoteCard, NoteCardWide } from '../NoteCard';
-import { ProgContext } from '../ModeContext';
 import { useDroppable } from '@dnd-kit/core';
 import { Chord, Progression, Line } from '../types';
 
