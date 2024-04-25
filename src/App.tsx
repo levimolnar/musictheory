@@ -1,14 +1,16 @@
 import React from 'react';
 import './App.css';
 
-import { ModeContext } from './ModeContext';
-import { ProgBar } from './ProgBar';
-import { ModeList } from './ModeList';
+import { ModeContext } from './components/ModeContext';
+import { ProgBar } from './components/ProgBar';
+import { ModeList } from './components/ModeList';
+import { Backdrop } from './components/Backdrop';
 
 function App() {
   return (
     <div id='wrapper'>
-      <div id='backdropFull' />
+      <Backdrop />
+      {/* <div id='backdropFull' /> */}
       {/* <div id='backdropA' />
       <div id='backdropB' /> */}
       {/* <div>

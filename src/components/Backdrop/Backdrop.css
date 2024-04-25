@@ -1,0 +1,23 @@
+.coverage {
+  width: 100%; height: 100%;
+  position: absolute;
+}
+
+.texture { z-index: -1 }
+.color { z-index: -2 }
+
+.backdrop__controls {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  bottom: 15px; left: 15px;
+  opacity: .333;
+  transition: opacity 250ms ease;
+}
+
+.backdrop__controls:hover { opacity: 1 }
+
+.colorInput { width: 50px; height: 50px }
+.rangeInput { width: 10px; height: 50px; appearance: slider-vertical }

@@ -16,7 +16,7 @@
 
   /* background: url(./ModeList/noise.png) #4e67cd; */
   /* background: url(./ModeList/noise.png) #7F7F7F; */
-  background: url(./ModeList/noise.png) #333;
+  background: url(./components/ModeList/noise.png) #333;
   /* background: url(bg2.jpeg) center/200%;
   filter: saturate(0) contrast(22%) brightness(50%); */
 }
@@ -27,7 +27,7 @@
   left: 0;
   z-index: -1;
 
-  background: url(./ModeList/noise.png) #333;
+  background: url(./components/ModeList/noise.png) #333;
   /* background: url(./ModeList/noise.png) #e56f5a; */
 }
 
@@ -38,6 +38,6 @@
   z-index: -1;
 
   /* background: url(bg2.jpeg) center/300%; */
-  background: url(./ModeList/noise.png) #4e67cd;
+  background: url(./components/ModeList/noise.png) #4e67cd;
   /* background: url(./ModeList/noise.png) #ddd; */
 }
