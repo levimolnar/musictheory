@@ -10,7 +10,8 @@ type Color = RGB | RGBA | HEX;
 
 export const Backdrop = () => {
   
-  const [hexCode, setHexCode] = useState<string>("#555");
+  const [hexCode, setHexCode] = useState<string>("#555555");
+  // const [hexCode, setHexCode] = useState<string>("#FF7864");
   const [textureOpacity, setTextureOpacity] = useState<number>(1);
   const [textureBrightness, setTextureBrightness] = useState<number>(0);
 

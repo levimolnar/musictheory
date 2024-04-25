@@ -55,7 +55,7 @@ export const defModeRecipes: {[modeSetName: string]: {[modeName: string]: number
     "diminished":           [0,2,3,5,6,8,9,11],
     "chromatic":            [0,1,2,3,4,5,6,7,8,9,10,11],
   }
-}
+};
 
 // export const chordIntervals: {[key: number]: {full: string, short: string, symbol: string}} = {
 //   33:  {full: "Diminished",              short: "dim",     symbol: "\uE870"  },
@@ -71,7 +71,7 @@ export const defModeRecipes: {[modeSetName: string]: {[modeName: string]: number
 //   442: {full: "Augmented seventh",       short: "aug7",    symbol: "+7"      },
 //   443: {full: "Augmented major seventh", short: "augmaj7", symbol: "+M7"     },
 //   444: {full: "Augmented",               short: "aug",     symbol: "+"       },
-// }
+// };
 
 export const chordIntervals: {[key: number]: {full: string, short: string, symbol: string}} = {
   25:  {full: "Suspended second",                           short: "unmarked", symbol: "sus2"    },
@@ -103,39 +103,29 @@ export const chordIntervals: {[key: number]: {full: string, short: string, symbo
   442: {full: "Augmented seventh",                          short: "aug7",     symbol: "+7"      },
   443: {full: "Augmented major seventh",                    short: "augmaj7",  symbol: "+M7"     },
   // 444: {full: "Augmented",                                  short: "aug",     symbol: "+"       }, 
-}
+};
 
-export const numberMatrix: Array<{[key: number]: number}> = [
-  {[-2]: 10, [-1]: 11, 0:  0, 1:  1, 2:  2},
-  {[-2]:  0, [-1]:  1, 0:  2, 1:  3, 2:  4},
-  {[-2]:  2, [-1]:  3, 0:  4, 1:  5, 2:  6},
-  {[-2]:  3, [-1]:  4, 0:  5, 1:  6, 2:  7},
-  {[-2]:  5, [-1]:  6, 0:  7, 1:  8, 2:  9},
-  {[-2]:  7, [-1]:  8, 0:  9, 1: 10, 2: 11},
-  {[-2]:  9, [-1]: 10, 0: 11, 1:  0, 2:  1},
-]
-
-export const characterMatrix: Array<{[key: number]: string}> = [
-  {[-2]: 'C\uED64', [-1]: 'C\uED60', 0: 'C', 1: 'C\uED62', 2: 'C\uED63'},
-  {[-2]: 'D\uED64', [-1]: 'D\uED60', 0: 'D', 1: 'D\uED62', 2: 'D\uED63'},
-  {[-2]: 'E\uED64', [-1]: 'E\uED60', 0: 'E', 1: 'E\uED62', 2: 'E\uED63'},
-  {[-2]: 'F\uED64', [-1]: 'F\uED60', 0: 'F', 1: 'F\uED62', 2: 'F\uED63'},
-  {[-2]: 'G\uED64', [-1]: 'G\uED60', 0: 'G', 1: 'G\uED62', 2: 'G\uED63'},
-  {[-2]: 'A\uED64', [-1]: 'A\uED60', 0: 'A', 1: 'A\uED62', 2: 'A\uED63'},
-  {[-2]: 'B\uED64', [-1]: 'B\uED60', 0: 'B', 1: 'B\uED62', 2: 'B\uED63'},
-]
+export const combinedMatrix: Array<{[key: number]: {num: number, char: string}}> = [
+  {[-2]: {num: 10, char: 'C\uED64'}, [-1]: {num: 11, char: 'C\uED60'}, 0: {num:  0, char: 'C'}, 1: {num:  1, char: 'C\uED62'}, 2: {num:  2, char: 'C\uED63'}},
+  {[-2]: {num:  0, char: 'D\uED64'}, [-1]: {num:  1, char: 'D\uED60'}, 0: {num:  2, char: 'D'}, 1: {num:  3, char: 'D\uED62'}, 2: {num:  4, char: 'D\uED63'}},
+  {[-2]: {num:  2, char: 'E\uED64'}, [-1]: {num:  3, char: 'E\uED60'}, 0: {num:  4, char: 'E'}, 1: {num:  5, char: 'E\uED62'}, 2: {num:  6, char: 'E\uED63'}},
+  {[-2]: {num:  3, char: 'F\uED64'}, [-1]: {num:  4, char: 'F\uED60'}, 0: {num:  5, char: 'F'}, 1: {num:  6, char: 'F\uED62'}, 2: {num:  7, char: 'F\uED63'}},
+  {[-2]: {num:  5, char: 'G\uED64'}, [-1]: {num:  6, char: 'G\uED60'}, 0: {num:  7, char: 'G'}, 1: {num:  8, char: 'G\uED62'}, 2: {num:  9, char: 'G\uED63'}},
+  {[-2]: {num:  7, char: 'A\uED64'}, [-1]: {num:  8, char: 'A\uED60'}, 0: {num:  9, char: 'A'}, 1: {num: 10, char: 'A\uED62'}, 2: {num: 11, char: 'A\uED63'}},
+  {[-2]: {num:  9, char: 'B\uED64'}, [-1]: {num: 10, char: 'B\uED60'}, 0: {num: 11, char: 'B'}, 1: {num:  0, char: 'B\uED62'}, 2: {num:  1, char: 'B\uED63'}},
+];
 
 export const positions: Array<Array<[number, number]>> = [
-  [[0, 0], [6, 1], [1,-2]],
-  [[1,-1], [0, 1], [6, 2]],
-  [[1, 0], [2,-2], [0, 2]],
-  [[2,-1], [1, 1], [3,-2]],
-  [[2, 0], [3,-1], [1, 2]],
-  [[3, 0], [2, 1], [4,-2]],
-  [[4,-1], [3, 1], [2, 2]],
-  [[4, 0], [5,-2], [3, 2]],
-  [[5,-1], [4, 1]],
-  [[5, 0], [6,-2], [4, 2]],
-  [[6,-1], [5, 1], [0,-2]],
-  [[6, 0], [0,-1], [5, 2]],
-]
+  [[0, 0], [6, 1], [1,-2]], // C
+  [[1,-1], [0, 1], [6, 2]], // C#
+  [[1, 0], [2,-2], [0, 2]], // D
+  [[2,-1], [1, 1], [3,-2]], // D#
+  [[2, 0], [3,-1], [1, 2]], // E
+  [[3, 0], [2, 1], [4,-2]], // F
+  [[4,-1], [3, 1], [2, 2]], // F#
+  [[4, 0], [5,-2], [3, 2]], // G
+  [[5,-1], [4, 1]],         // G#
+  [[5, 0], [6,-2], [4, 2]], // A
+  [[6,-1], [5, 1], [0,-2]], // A#
+  [[6, 0], [0,-1], [5, 2]], // B
+];

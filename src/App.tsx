@@ -10,28 +10,13 @@ function App() {
   return (
     <div id='wrapper'>
       <Backdrop />
-      {/* <div id='backdropFull' /> */}
-      {/* <div id='backdropA' />
-      <div id='backdropB' /> */}
-      {/* <div>
-        <ModeContext>
-          <Bar />
-          <div style={{height: '6px'}}/>
+      <ModeContext>
+        <div style={{display: 'flex'}}>
           <ModeList />
-        </ModeContext>
-      </div> */}
-      {/* <div style={{width: '50px'}}/> */}
-      <div>
-        <ModeContext>
-          <div style={{display: 'flex'}}>
-            <ModeList />
-            <div style={{width: '25px'}}/>
-            <ProgBar />
-            {/* <div style={{width: '50px'}}/>
-            <ProgBar /> */}
-          </div>
-        </ModeContext>
-      </div>
+          <div style={{width: '25px'}}/>
+          <ProgBar />
+        </div>
+      </ModeContext>
     </div>
   );
 }

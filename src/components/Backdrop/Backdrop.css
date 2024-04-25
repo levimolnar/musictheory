@@ -14,7 +14,7 @@
 
   bottom: 15px; left: 15px;
   opacity: .333;
-  transition: opacity 250ms ease;
+  transition: opacity 250ms ease-in-out;
 }
 
 .backdrop__controls:hover { opacity: 1 }

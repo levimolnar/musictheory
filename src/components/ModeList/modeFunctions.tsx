@@ -1,4 +1,4 @@
-import { numberMatrix, positions } from "./modeData";
+import { combinedMatrix, positions } from "./modeData";
 
 export const getSpellingPath = (recipe: number[]) => {
   const startingCoords = positions[recipe[0]];
@@ -10,7 +10,7 @@ export const getSpellingPath = (recipe: number[]) => {
     let current: {spellingPath: Array<[number, number]>, accidentalCount: number} = {spellingPath: [], accidentalCount: 0};
 
     for (let [j, x] of Object.entries(xArray)) {
-      const match = Object.entries(numberMatrix[x]).find(([_, number]) => number === recipe[+j]);
+      const match = Object.entries(combinedMatrix[x]).find(([_, { num }]) => num === recipe[+j]);
       if (match) {
         const [y] = match;
         current.spellingPath.push([x, +y]);

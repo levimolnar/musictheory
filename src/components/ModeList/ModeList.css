@@ -91,26 +91,21 @@
   filter: invert(1);
 }
 
-.modeList {
+/* .modeList {
   width: max-content;
   z-index: 1;
 
   border-top: 1px solid transparent; border-right: 1px solid transparent;
-  
-  /* border-radius: 8px;
-  border-top: 1px solid #ffffff88; border-right: 1px solid #ffffff88;
-  background-color: #ffffff22;
-  box-shadow: var(--defShadow); */
 
   display: flex;
   flex-direction: row;
-}
+} */
 
-.modeList * {
+/* .modeList * {
   z-index: 1;
-}
+} */
 
-.modeListHeaders {
+/* .modeListHeaders {
   display: flex;
   flex-direction: column;
 
@@ -118,43 +113,47 @@
   overflow: hidden;
 
   box-shadow: inset -2px 0 2px #00000022;
-}
+} */
 
-.referenceButton {
-  width: 18px; height: 18px;
-  background: radial-gradient(#0000002b 25%, #ffffff44 25% 40%, #0000002b 40%, transparent 66.6%);
-}
+.reference {
+  width: 40px; height: 100%;
+  position: absolute;
+  left: -40px;
 
-.referenceButton:hover {
-  background: radial-gradient(#ffffff44 25%, #0000002b 33.3%, transparent 66.6%);
-}
-
-.modeListContent {
   display: flex;
-  flex-direction: column;
-
-  border-radius: 0 10px 10px 0;
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 250ms ease-in-out;
 }
+
+.reference__marker { 
+  width: 18px; 
+  height: 18px; 
+  cursor: pointer;
+}
+
+.reference__marker--selected { background: radial-gradient(#ff0055 33.3%, transparent 50%) }
+.reference__marker--unselected { background: radial-gradient(#0000002b 25%, #ffffff88 25% 40%, #0000002b 40%, transparent 66.6%) }
+.reference__marker--unselected:hover { background: radial-gradient(#ffffff88 25%, #0000002b 33.3%, transparent 66.6%) }
 
 .headerRow {
-  height: 50px;
+  height: 100%;
   padding: 0 10px 0 10px;
+  box-sizing: content-box;
 
   display: flex;
   align-items: center;
 
   background-color: #ffffff22;
-  box-shadow: 0px 2px 2px #ffffff33;
+  box-shadow: 0px 2px 2px #ffffff33, inset -3px 0 2px #00000022;
 }
 
 .modeTag {
-  height: 19px;
+  height: 19px; 
+  line-height: 17px;
 
-  /* font-family: 'Calibri'; */
   font-family: 'Lacquer';
 
-  line-height: 17px;
   font-size: 1em;
 
   background-color: #333;
@@ -166,7 +165,7 @@
 }
 
 .contentRow {
-  width: auto; height: 50px;
+  height: 100%; 
   padding: 0 10px 0 10px;
 
   display: flex;
@@ -174,8 +173,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 7px;
-
-  overflow: hidden;
 
   box-shadow: 0px 2px 2px #ffffff33;
 }

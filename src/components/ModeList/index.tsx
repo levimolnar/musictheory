@@ -7,7 +7,7 @@ import { useDraggable } from '@dnd-kit/core';
 
 import { NoteCard, NoteCardWide } from '../NoteCard';
 import { getSpellingPath, getIntervalString, getOffset } from './modeFunctions';
-import { characterMatrix, chordIntervals, defModeRecipes } from './modeData';
+import { chordIntervals, combinedMatrix, defModeRecipes } from './modeData';
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
@@ -115,14 +115,22 @@ const ScaleHeader = ({scaleName, scaleRecipe}: {scaleName: string, scaleRecipe: 
   ];
 
   return (
-    <div className='headerRow'>      
+    // <div className='headerRow'>      
+    //   <span className='modeTag'>
+    //     {[...scaleName].map((char: string) => (BravuraChars.includes(char)) 
+    //       ? <span style={{fontFamily: 'Bravura', letterSpacing: '2px'}}>{char}</span> 
+    //       : char
+    //     )}
+    //   </span>
+    // </div>
+    <td className='headerRow'>      
       <span className='modeTag'>
         {[...scaleName].map((char: string) => (BravuraChars.includes(char)) 
           ? <span style={{fontFamily: 'Bravura', letterSpacing: '2px'}}>{char}</span> 
           : char
         )}
       </span>
-    </div>
+    </td>
   )
 }
 
@@ -154,7 +162,7 @@ const ScaleRow = ({scaleName, scaleRecipe}: {scaleName: string, scaleRecipe: num
     
       const chordsArray = scaleRecipe.map((x, i) => {
         const [rootX, rootY] = spellingPath[i];
-        const root = characterMatrix[rootX][rootY];
+        const root = combinedMatrix[rootX][rootY].char;
         const chordRecipe = Array.from({length: seventh ? 4 : 3 }, (_, j) => scaleRecipe[(i + 2*j) % scaleRecipe.length]);
         const type = chordIntervals[+getIntervalString(chordRecipe)];
         const offset = getOffset(x, ref!.numRef[i]);
@@ -177,7 +185,7 @@ const ScaleRow = ({scaleName, scaleRecipe}: {scaleName: string, scaleRecipe: num
   }, [scaleName, scaleRecipe, ref, seventh]);
   
   return (
-    <div className='contentRow'>
+    <td className='contentRow'>
       { 
         chords
         ? chords.map((chord, i) => <ChordDraggable key={chord.id} chord={chord} setFunc={setChords} index={i}/>)
@@ -198,18 +206,18 @@ const ScaleRow = ({scaleName, scaleRecipe}: {scaleName: string, scaleRecipe: num
             <span style={{padding: '0 10px 0 15px'}}>⚠</span>
           </div>
       }
-    </div>
+    </td>
   )
 }
 
-const ModeListContext = createContext<{seventh: boolean, ref: {numRef: number[], numFunc: any} | undefined}>({seventh: false, ref: undefined});
+const ModeListContext = createContext<{seventh: boolean, ref: {numRef: number[], numFunc: any} | undefined}>({seventh: true, ref: undefined});
 
 export const ModeList = () => {
 
   const [modes, setModes] = useState<{[key: string]: number[]} | undefined>(undefined);
   const [transpose, setTranspose] = useState<number>(0);
   const [modeTab, setModeTab] = useState<string>(Object.keys(defModeRecipes)[0]);
-  const [seventhEnabled, setSeventhEnabled] = useState<boolean>(false);
+  const [seventhEnabled, setSeventhEnabled] = useState<boolean>(true);
 
   const [refCoord, setRefCoord] = useState<[string, number]>(['Diatonic', 1]);
   const [numRef, setNumRef] = useState<number[]>([0,2,4,5,7,9,11]);
@@ -237,6 +245,7 @@ export const ModeList = () => {
   useEffect(() => { calcTransposedData() }, [modeTab, transpose, refCoord]);
 
   const [uniqueModeListId] = useState(uuidv4());
+  const [hovered, setHovered] = useState(false);
 
   return (
     <ModeListContext.Provider value={{seventh: seventhEnabled, ref: {numRef: numRef, numFunc: setNumRef}}}>
@@ -244,35 +253,39 @@ export const ModeList = () => {
         <SettingsBar settingValues={[transpose, modeTab, seventhEnabled]} settingFunctions={[setTranspose, setModeTab, setSeventhEnabled]}/>
         <div className='componentWrapper'>
           <div className='backdrop blur'/>
-          <div className='modeList'>
-            { 
-              modes ? (
-                <>
-                  <div style={{position: 'absolute', left: '-30px'}}>
-                    <div style={{position: 'absolute', zIndex: '2', width: '30px', height: '100%', pointerEvents: 'none'}}>
-                      <div style={{position: 'absolute', width: '18px', height: '18px', top: `${refCoord[1]*50 + 16}px`, background: (modeTab === refCoord[0]) ? 'radial-gradient(#ff0055 33.3%, transparent 50%)' : 'none', transition: (modeTab === refCoord[0]) ? 'top 250ms ease-in-out' : 'none'}}></div> 
-                    </div>
-                    { 
-                      Object.keys(modes).map((modeName: string, modeIndex: number) =>
-                        <div style={{width: '25px', height: '50px', display: 'flex', alignItems: 'center'}}>
-                          <div 
-                            className='referenceButton'
-                            onClick={() => setRefCoord([modeTab, modeIndex])}
-                          />
-                        </div> 
-                      ) 
-                    }
-                  </div>
-                  <div className='modeListHeaders'>
-                    { Object.keys(modes).map((modeName: string, modeIndex: number) => <ScaleHeader key={`${uniqueModeListId}-H${modeIndex}`} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
-                  </div>
-                  <div className='modeListContent'>
-                    { Object.keys(modes).map((modeName: string, modeIndex: number) => <ScaleRow key={`${uniqueModeListId}-R${modeIndex}`} scaleName={modeName} scaleRecipe={modes[modeName]}/>) }
-                  </div>
-                </>
-              ) : <div style={{width: '350px', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
-            }
-          </div>
+          { 
+            modes ? (
+              <table cellPadding="0" style={{borderCollapse: "collapse", width: "max-content"}}>
+                {
+                  Object.entries(modes).map(([modeName, recipe], modeIndex) => (
+                    <tr style={{position: "relative"}}>
+                      <div
+                        className="reference"
+                        onMouseEnter={() => setHovered(true)}
+                        onMouseLeave={() => setHovered(false)}
+                        style={{opacity: hovered ? 1 : 0.5}}
+                      >
+                        <div 
+                          className={
+                            (modeTab === refCoord[0] && modeIndex === refCoord[1]) 
+                            ? "reference__marker reference__marker--selected" 
+                            : "reference__marker reference__marker--unselected"
+                          }
+                          onClick={() => setRefCoord([modeTab, modeIndex])}
+                        />
+                      </div>
+                      <td style={{height: "50px"}}>
+                        <ScaleHeader key={`${uniqueModeListId}-H${modeIndex}`} scaleName={modeName} scaleRecipe={recipe}/>
+                      </td>
+                      <td style={{height: "50px"}}>
+                        <ScaleRow    key={`${uniqueModeListId}-R${modeIndex}`} scaleName={modeName} scaleRecipe={recipe}/>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </table>
+            ) : <div style={{width: '350px', fontSize: '.8em', textAlign: 'center', padding: '10px'}}>LOADING...</div>
+          }
         </div>
       </div>
     </ModeListContext.Provider>
